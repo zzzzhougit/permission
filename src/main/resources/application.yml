@@ -1,11 +1,7 @@
-#Server
 server:
   port: 80
 
-#Spring
 spring:
-
-  #Thymeleaf
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html
@@ -16,7 +12,7 @@ spring:
     servlet:
       content-type: text/html; charset=utf-8
 
-  #static resource(静态资源浏览器缓存策略)
+  #静态资源浏览器缓存策略
   resources:
     add-mappings: true #启用静态文件处理, 默认true
     chain:
@@ -28,9 +24,8 @@ spring:
       period: 3600 #缓存时间
     static-locations: ["classpath:/static/"]
 
-  #Dr
   datasource:
-      url: jdbc:mysql://localhost:3306/permission?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&&serverTimezone=UTC
+      url: jdbc:mysql://localhost:3306/permission?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&serverTimezone=UTC
       username: root
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
@@ -49,11 +44,17 @@ spring:
       poolPreparedStatements: true
       maxOpenPreparedStatements: 20
 
-#MyBatis
 mybatis:
   type-aliases-package: com.yaozhou
-  mapper-locations: classpath:com/yaozhou/permission/service/**/*.xml
+  mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true
     default-fetch-size: 100
     default-statement-timeout: 3000
+
+pagehelper:
+    helperDialect: mysql
+    reasonable: true
+    supportMethodsArguments: true
+    params: count=countSql
+    returnPageInfo: check
