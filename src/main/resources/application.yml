@@ -58,3 +58,7 @@ pagehelper:
     supportMethodsArguments: true
     params: count=countSql
     returnPageInfo: check
+
+#日志相关配置
+logging:
+  path: K:\Git\permission\logs
