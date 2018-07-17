@@ -15,10 +15,6 @@ public class Result<T> {
     private String message;
     private boolean success;
 
-    private Result(T data) {
-        this(true, "", 0, data);
-    }
-
     private Result(boolean success, String message, int code, T data) {
         this.code = code;
         this.data = data;
@@ -27,7 +23,7 @@ public class Result<T> {
     }
 
     public static <T> Result<T> success(T data) {
-        return new Result<T>(data);
+        return new Result<T>(true, "", 0, data);
     }
 
     public static <T> Result<T> error(CodeMessage codeMessage) {
