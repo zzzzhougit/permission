@@ -5,6 +5,7 @@ import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.message.Result;
 import com.yaozhou.permission.common.message.entity.CodeMessage;
 import com.yaozhou.permission.common.message.entity.DefaultCodeMessage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Yao.Zhou
  * @since 2018/7/17 22:34
  */
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionResolver  {
 
@@ -34,12 +36,12 @@ public class GlobalExceptionResolver  {
         //项目自定义异常
         } else if (exception instanceof PermException) {
             DefaultPermException permException = (DefaultPermException) exception;
-
+            log.error(permException.getCodeMessage().getMessage(), exception);
             codeMessage = permException.getCodeMessage();
 
         //其他未定义异常统一是服务器异常
         } else {
-
+            log.error(exception.getMessage(), exception);
             codeMessage = DefaultCodeMessage.SERVER_ERROR;
         }
 
