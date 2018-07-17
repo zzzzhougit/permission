@@ -1,6 +1,6 @@
 package com.yaozhou.permission.common.message;
 
-import com.yaozhou.permission.common.message.code.CodeMessage;
+import com.yaozhou.permission.common.message.entity.CodeMessage;
 
 /**
  * 接口返回消息

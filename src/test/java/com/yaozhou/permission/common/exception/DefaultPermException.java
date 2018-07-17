@@ -1,6 +1,6 @@
 package com.yaozhou.permission.common.exception;
 
-import com.yaozhou.permission.common.message.code.CodeMessage;
+import com.yaozhou.permission.common.message.entity.CodeMessage;
 
 /**
  * @author Yao.Zhou

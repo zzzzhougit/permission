@@ -1,4 +1,4 @@
-package com.yaozhou.permission.common.message.code;
+package com.yaozhou.permission.common.message.entity;
 
 /**
  * 错误消息和错误码
