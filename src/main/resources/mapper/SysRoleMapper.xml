@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yaozhou.permission.dao.SysRoleMapper">
+  <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysRole">
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="SMALLINT" property="type" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yaozhou.permission.model.SysRole">
+    insert into sys_role (role_id, name, type, 
+      status, remark, create_time, 
+      operate_time, operator, operate_ip
+      )
+    values (#{roleId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=SMALLINT}, 
+      #{status,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{operateIp,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yaozhou.permission.model.SysRole">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="operateTime != null">
+        operate_time,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="operateIp != null">
+        operate_ip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null">
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null">
+        #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysRole">
+    <result column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type" jdbcType="SMALLINT" property="type" />
+    <result column="status" jdbcType="SMALLINT" property="status" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
+    <result column="operator" jdbcType="VARCHAR" property="operator" />
+    <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
+  </resultMap>
+  <insert id="insert" parameterType="com.yaozhou.permission.model.SysRole">
+    insert into sys_role (role_id, name, type, 
+      status, remark, create_time, 
+      operate_time, operator, operate_ip
+      )
+    values (#{roleId,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{type,jdbcType=SMALLINT}, 
+      #{status,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{operateTime,jdbcType=TIMESTAMP}, #{operator,jdbcType=VARCHAR}, #{operateIp,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.yaozhou.permission.model.SysRole">
+    insert into sys_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        role_id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="operateTime != null">
+        operate_time,
+      </if>
+      <if test="operator != null">
+        operator,
+      </if>
+      <if test="operateIp != null">
+        operate_ip,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleId != null">
+        #{roleId,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null">
+        #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null">
+        #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>
