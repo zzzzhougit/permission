@@ -57,6 +57,7 @@ public class GlobalExceptionResolver  {
         String x_requested_with = request.getHeader("x-requested-with");
 
         if (!StringUtils.isBlank(x_requested_with) && x_requested_with.equals("XMLHttpRequest")) {
+
             return true;
         }
 
