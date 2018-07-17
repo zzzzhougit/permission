@@ -1,0 +1,59 @@
+#Server
+server:
+  port: 80
+
+#Spring
+spring:
+
+  #Thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    enabled: true
+    encoding: UTF-8
+    mode: HTML
+    servlet:
+      content-type: text/html; charset=utf-8
+
+  #static resource(静态资源浏览器缓存策略)
+  resources:
+    add-mappings: true #启用静态文件处理, 默认true
+    chain:
+      cache: true
+      enabled: true
+      gzipped: true
+      html-application-cache: true
+    cache:
+      period: 3600 #缓存时间
+    static-locations: ["classpath:/static/"]
+
+  #Dr
+  datasource:
+      url: jdbc:mysql://localhost:3306/permission?useUnicode=true&characterEncoding=utf-8&allowMultiQueries=true&useSSL=false&&serverTimezone=UTC
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      filters: stat
+      maxActive: 2
+      initialSize: 1
+      maxWait: 60000
+      minIdle: 1
+      timeBetweenEvictionRunsMillis: 6000
+      minEvictableIdleTimeMillis: 300000
+      validationQuery: select 'x'
+      testWhileIdle: true
+      testOnBorrow: false
+      testOnReturn: false
+      poolPreparedStatements: true
+      maxOpenPreparedStatements: 20
+
+#MyBatis
+mybatis:
+  type-aliases-package: com.yaozhou
+  mapper-locations: classpath:com/yaozhou/permission/service/**/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    default-fetch-size: 100
+    default-statement-timeout: 3000
