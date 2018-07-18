@@ -4,7 +4,6 @@ import com.yaozhou.permission.common.message.Result;
 import com.yaozhou.permission.controllers.BaseController;
 import com.yaozhou.permission.params.DeptParam;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -20,7 +19,8 @@ public class SysDeptController extends BaseController {
 
     @ResponseBody
     @RequestMapping(path = "/save")
-    public Result<?> saveDept(@Valid DeptParam deptParam, BindingResult bindingResult) {
+    public Result<?> saveDept(@Valid DeptParam deptParam) throws Exception {
+
         return null;
     }
 
