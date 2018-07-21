@@ -18,7 +18,7 @@ public class LevelUtil {
      * @return
      */
     public static String calculateLevel(String parentLevel, int parentId) {
-        if (StringUtils.isBlank(parentLevel)) {
+        if (StringUtils.isBlank(parentLevel) || parentId <= 0) {
 
             return ROOT;
         } else {

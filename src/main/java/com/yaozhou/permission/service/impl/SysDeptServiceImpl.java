@@ -40,11 +40,12 @@ public class SysDeptServiceImpl implements SysDeptService {
 
         SysDept after = SysDept
                             .builder()
+                            .name(deptParam.getName())
+                            .parentId(deptParam.getParentId())
+                            .seq(deptParam.getSeq())
+                            .remark(deptParam.getRemark())
+
                             .deptId(before.getDeptId())
-                            .name(before.getName())
-                            .parentId(before.getParentId())
-                            .seq(before.getSeq())
-                            .remark(before.getRemark())
                             //TODO
                             .operator("System")
                             .operateIp("127.0.0.1")
@@ -77,7 +78,7 @@ public class SysDeptServiceImpl implements SysDeptService {
                                 )
                                 .build();
 
-        sysDeptMapper.insert(sysDept);
+        sysDeptMapper.insertSelective(sysDept);
     }
 
     //===================================
@@ -90,7 +91,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     private void updateWithChild(SysDept before, SysDept after) {
         //如果更新了level, 需要更新子部门的level
-        if (!before.getLevel().equals(after)) {
+        if (!before.getLevel().equals(after.getLevel())) {
             List<SysDept> childrenSysDept = sysDeptMapper.getChildrenDeptByLevel(before.getLevel());
             if (!CollectionUtils.isEmpty(childrenSysDept)) {
                 List<SysDept> childrenSysDeptAfter = new LinkedList<>(); //children to be update
@@ -127,6 +128,11 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return
      */
     private String calculateLevel(Integer parentId) {
+        if (null == parentId) {
+
+            return LevelUtil.calculateLevel(null, 0);
+        }
+
         return LevelUtil.calculateLevel(
                     sysDeptMapper.selectLevelByPrimaryKey(parentId), parentId
                 );

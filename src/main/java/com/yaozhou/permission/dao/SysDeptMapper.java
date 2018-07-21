@@ -27,7 +27,7 @@ public interface SysDeptMapper {
      * @param name
      * @return
      */
-    public int countByNameAndParentId(@Param("parentId") int parentId, @Param("name") String name, @Param("deptId") Integer deptId);
+    public int countByNameAndParentId(@Param("parentId") Integer parentId, @Param("name") String name, @Param("deptId") Integer deptId);
 
     /**
      * 查询所有的dept

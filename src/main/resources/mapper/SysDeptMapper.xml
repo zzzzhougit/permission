@@ -22,8 +22,10 @@
   <select id="countByNameAndParentId" parameterType="map" resultType="java.lang.Integer">
     select count(1)
     from sys_dept
-    where parent_id = #{parentId}
-    and name = #{name}
+    where name = #{name}
+    <if test="parentId != null">
+      and parent_id = #{parentId}
+    </if>
     <if test="deptId != null">
       and dept_id != #{deptId}
     </if>

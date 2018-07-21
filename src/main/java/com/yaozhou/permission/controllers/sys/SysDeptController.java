@@ -30,12 +30,18 @@ public class SysDeptController extends BaseController {
      * @throws Exception
      */
     @RequestMapping(path = "/add", method = {RequestMethod.GET, RequestMethod.POST})
-    public Result<?> saveDept(@Valid DeptParam deptParam) throws Exception {
+    public Result<?> addDept(@Valid DeptParam deptParam) throws Exception {
         sysDeptService.add(deptParam);
 
         return Result.success(null);
     }
 
+    /**
+     * 更新部门
+     * @param deptParam
+     * @return
+     * @throws Exception
+     */
     @RequestMapping(path = "/update", method = {RequestMethod.GET, RequestMethod.POST})
     public Result<?> updateDept(@Valid DeptParam deptParam) throws Exception {
         sysDeptService.update(deptParam);
