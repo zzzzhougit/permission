@@ -9,10 +9,9 @@ import java.io.Serializable;
 @Setter
 public class SysLogWithBLOBs extends SysLog implements Serializable {
 
+    private static final long serialVersionUID = 830217319743200531L;
+
     private String oldValue;
 
     private String newValue;
-
-    private static final long serialVersionUID = 1L;
-
 }

@@ -10,6 +10,8 @@ import java.util.Date;
 @Setter
 public class SysUser implements Serializable {
 
+    private static final long serialVersionUID = 5962324950971243561L;
+
     private Integer userId;
 
     private String username;
@@ -33,7 +35,5 @@ public class SysUser implements Serializable {
     private Date operateTime;
 
     private String operateIp;
-
-    private static final long serialVersionUID = 1L;
 
 }

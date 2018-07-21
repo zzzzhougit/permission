@@ -10,6 +10,8 @@ import java.util.Date;
 @Setter
 public class SysLog implements Serializable {
 
+    private static final long serialVersionUID = -6319010073922166987L;
+
     private Integer logId;
 
     private Short type;
@@ -25,7 +27,5 @@ public class SysLog implements Serializable {
     private String operateIp;
 
     private Short status;
-
-    private static final long serialVersionUID = 1L;
 
 }

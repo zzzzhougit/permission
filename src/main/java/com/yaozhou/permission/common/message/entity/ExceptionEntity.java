@@ -32,6 +32,6 @@ public interface ExceptionEntity {
 
     public String getMessage();
 
-    public String setMessage(String message);
+    public void setMessage(String message);
 
 }

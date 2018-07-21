@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yaozhou.permission.dao.SysAclMapper">
   <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysAcl">
-    <result column="acl_id" jdbcType="INTEGER" property="aclId" />
+    <id column="acl_id" jdbcType="INTEGER" property="aclId" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="acl_module_id" jdbcType="INTEGER" property="aclModuleId" />
@@ -16,6 +16,20 @@
     <result column="operator" jdbcType="VARCHAR" property="operator" />
     <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
   </resultMap>
+  <sql id="Base_Column_List">
+    acl_id, code, name, acl_module_id, url, type, status, seq, remark, create_time, operate_time, 
+    operator, operate_ip
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_acl
+    where acl_id = #{aclId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_acl
+    where acl_id = #{aclId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.yaozhou.permission.model.SysAcl">
     insert into sys_acl (acl_id, code, name, 
       acl_module_id, url, type, 
@@ -113,4 +127,62 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yaozhou.permission.model.SysAcl">
+    update sys_acl
+    <set>
+      <if test="code != null">
+        code = #{code,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="aclModuleId != null">
+        acl_module_id = #{aclModuleId,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null">
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where acl_id = #{aclId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yaozhou.permission.model.SysAcl">
+    update sys_acl
+    set code = #{code,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      acl_module_id = #{aclModuleId,jdbcType=INTEGER},
+      url = #{url,jdbcType=VARCHAR},
+      type = #{type,jdbcType=SMALLINT},
+      status = #{status,jdbcType=SMALLINT},
+      seq = #{seq,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_ip = #{operateIp,jdbcType=VARCHAR}
+    where acl_id = #{aclId,jdbcType=INTEGER}
+  </update>
 </mapper>

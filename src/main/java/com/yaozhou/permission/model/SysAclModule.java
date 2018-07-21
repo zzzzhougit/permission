@@ -9,6 +9,9 @@ import java.util.Date;
 @Getter
 @Setter
 public class SysAclModule implements Serializable {
+
+    private static final long serialVersionUID = -81089914522267350L;
+
     private Integer aclModuleId;
 
     private String name;
@@ -30,7 +33,5 @@ public class SysAclModule implements Serializable {
     private String operator;
 
     private String operateIp;
-
-    private static final long serialVersionUID = 1L;
 
 }

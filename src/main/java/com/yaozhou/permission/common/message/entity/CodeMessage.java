@@ -22,6 +22,10 @@ public class CodeMessage implements ExceptionEntity {
 
     //======================================
 
+    public static ExceptionEntity create(int code, String message) {
+        return new CodeMessage(code, message);
+    }
+
     public static final CodeMessage SERVER_ERROR = new CodeMessage(CODE_SERVER_ERROR, "服务器异常");
 
 

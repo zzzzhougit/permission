@@ -10,6 +10,8 @@ import java.util.Date;
 @Setter
 public class SysRole implements Serializable {
 
+    private static final long serialVersionUID = 8211216611387272327L;
+
     private Integer roleId;
 
     private String name;
@@ -27,7 +29,5 @@ public class SysRole implements Serializable {
     private String operator;
 
     private String operateIp;
-
-    private static final long serialVersionUID = 1L;
 
 }
