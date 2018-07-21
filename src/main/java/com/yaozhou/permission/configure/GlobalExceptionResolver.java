@@ -1,6 +1,5 @@
-package com.yaozhou.permission.common.exception.Handler;
+package com.yaozhou.permission.configure;
 
-import com.yaozhou.permission.common.exception.DefaultPermException;
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.message.Result;
 import com.yaozhou.permission.common.message.entity.CodeMessage;
@@ -27,33 +26,33 @@ public class GlobalExceptionResolver  {
 
     @ExceptionHandler( value = {Exception.class} )
     public Object exceptionHandler(Model model, HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        ExceptionEntity codeMessage = null;
+        ExceptionEntity exceptionEntity = null;
 
         //参数绑定异常
         if (exception instanceof BindException) {
             BindException bindException = (BindException) exception;
-            codeMessage = new CodeMessage(CodeMessage.CODE_ARGE_ERROR, bindException.getAllErrors().get(0).getDefaultMessage());
+            exceptionEntity = new CodeMessage(CodeMessage.CODE_ARGE_ERROR, bindException.getAllErrors().get(0).getDefaultMessage());
 
         //项目自定义异常
         } else if (exception instanceof PermException) {
-            DefaultPermException permException = (DefaultPermException) exception;
-            log.error(permException.getCodeMessage().getMessage(), exception);
-            codeMessage = permException.getCodeMessage();
+            PermException permException = (PermException) exception;
+            log.error(permException.getExceptionEntity().getMessage(), exception);
+            exceptionEntity = permException.getExceptionEntity();
 
         //其他未定义异常统一是服务器异常
         } else {
             log.error(exception.getMessage(), exception);
-            codeMessage = CodeMessage.SERVER_ERROR;
+            exceptionEntity = CodeMessage.SERVER_ERROR;
         }
 
-        if (codeMessage instanceof ViewMessage) {
-            model.addAttribute("codeMessage", codeMessage);
+        if (exceptionEntity instanceof ViewMessage) {
+            model.addAttribute("codeMessage", exceptionEntity);
             //TODO path?
 
             return model;
         } else {
 
-            return Result.error(codeMessage);
+            return Result.error(exceptionEntity);
         }
     }
 
