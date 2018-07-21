@@ -10,6 +10,8 @@ public interface SysDeptMapper {
 
     int insertSelective(SysDept record);
 
+    String selectLevelByPrimaryKey(Integer deptId);
+
     SysDept selectByPrimaryKey(Integer deptId);
 
     int updateByPrimaryKeySelective(SysDept record);

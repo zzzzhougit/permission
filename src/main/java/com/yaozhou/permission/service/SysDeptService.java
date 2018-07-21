@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static com.yaozhou.permission.common.message.entity.ExceptionEntity.*;
+import static com.yaozhou.permission.util.LevelUtil.calculateLevel;
 
 /**
  * @author Yao.Zhou
@@ -27,15 +28,22 @@ public class SysDeptService {
         }
 
         SysDept sysDept = SysDept
-                .builder()
-                .seq(deptParam.getSeq())
-                .name(deptParam.getName())
-                .parentId(deptParam.getParentId())
-                .remark(deptParam.getRemark())
-                .build();
+                                .builder()
+                                .seq(deptParam.getSeq())
+                                .name(deptParam.getName())
+                                .remark(deptParam.getRemark())
+                                .parentId(deptParam.getParentId())
+                                //TODO
+                                .operator("System")
+                                .operateIp("127.0.0.1")
+                                .level(
+                                    calculateLevel(
+                                        sysDeptMappr.selectLevelByPrimaryKey(deptParam.getParentId()), deptParam.getParentId()
+                                    )
+                                )
+                                .build();
 
-        SysDept parentSysDept = sysDeptMappr.selectByPrimaryKey(deptParam.getParentId());
-
+        sysDeptMappr.insert(sysDept);
     }
 
     //===================================
