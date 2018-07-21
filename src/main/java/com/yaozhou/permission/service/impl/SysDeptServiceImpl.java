@@ -1,0 +1,65 @@
+package com.yaozhou.permission.service.impl;
+
+import com.yaozhou.permission.common.exception.PermException;
+import com.yaozhou.permission.common.result.entity.CodeMessage;
+import com.yaozhou.permission.dao.SysDeptMapper;
+import com.yaozhou.permission.model.SysDept;
+import com.yaozhou.permission.params.DeptParam;
+import com.yaozhou.permission.service.SysDeptService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import static com.yaozhou.permission.common.result.entity.PermEntity.*;
+import static com.yaozhou.permission.util.LevelUtil.calculateLevel;
+
+/**
+ * @author Yao.Zhou
+ * @since 2018/7/21 15:48
+ */
+@Service
+public class SysDeptServiceImpl implements SysDeptService {
+
+    @Autowired
+    private SysDeptMapper sysDeptMappr;
+
+    @Override
+    public void add(DeptParam deptParam) throws Exception {
+        if (exist(deptParam.getParentId(), deptParam.getName(), deptParam.getDeptId())) {
+            throw new PermException(CodeMessage.create(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门"));
+        }
+
+        SysDept sysDept = SysDept
+                                .builder()
+                                .seq(deptParam.getSeq())
+                                .name(deptParam.getName())
+                                .remark(deptParam.getRemark())
+                                .parentId(deptParam.getParentId())
+                                //TODO
+                                .operator("System")
+                                .operateIp("127.0.0.1")
+                                .level(
+                                    calculateLevel(
+                                        sysDeptMappr.selectLevelByPrimaryKey(deptParam.getParentId()), deptParam.getParentId()
+                                    )
+                                )
+                                .build();
+
+        sysDeptMappr.insert(sysDept);
+    }
+
+    //===================================
+
+    /**
+     * 检查部门是否存在
+     * @param parentId
+     * @param deptName
+     * @param deptId
+     * @return
+     */
+    private boolean exist(Integer parentId, String deptName, Integer deptId) {
+        //TODO
+
+        return true;
+    }
+
+}
