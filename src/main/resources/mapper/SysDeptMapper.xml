@@ -19,12 +19,29 @@
     operate_ip
   </sql>
 
+  <select id="countByNameAndParentId" parameterType="map" resultType="java.lang.Integer">
+    select count(1)
+    from sys_dept
+    where parent_id = #{parentId}
+    and name = #{name}
+    <if test="deptId != null">
+      and dept_id != #{deptId}
+    </if>
+  </select>
+
   <select id="getAllDept" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from sys_dept
   </select>
-  
+
+  <select id="getChildrenDeptByLevel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_dept
+    where level = #{level,jdbcType=VARCHAR} || '.%'
+  </select>
+
   <select id="selectLevelByPrimaryKey" parameterType="java.lang.Integer" resultType="java.lang.String">
     select level from sys_dept
     where dept_id = #{deptId,jdbcType=INTEGER}
@@ -117,6 +134,43 @@
       </if>
     </trim>
   </insert>
+
+  <update id="batchUpdateByPrimaryKeySelective" parameterType="collection">
+    <foreach collection="depts" item="dept" separator=";">
+      update sys_dept
+      <set>
+        <if test="dept.name != null">
+          name = #{dept.name,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.parentId != null">
+          parent_id = #{dept.parentId,jdbcType=INTEGER},
+        </if>
+        <if test="dept.level != null">
+          level = #{dept.level,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.seq != null">
+          seq = #{dept.seq,jdbcType=INTEGER},
+        </if>
+        <if test="dept.remark != null">
+          remark = #{dept.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.createTime != null">
+          create_time = #{dept.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="dept.operateTime != null">
+          operate_time = #{dept.operateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="dept.operator != null">
+          operator = #{dept.operator,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.operateIp != null">
+          operate_ip = #{dept.operateIp,jdbcType=VARCHAR},
+        </if>
+      </set>
+      where dept_id = #{dept.deptId,jdbcType=INTEGER}
+    </foreach>
+  </update>
+
   <update id="updateByPrimaryKeySelective" parameterType="com.yaozhou.permission.model.SysDept">
     update sys_dept
     <set>

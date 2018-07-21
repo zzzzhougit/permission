@@ -7,7 +7,9 @@ import com.yaozhou.permission.params.DeptParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -16,17 +18,40 @@ import javax.validation.Valid;
  * @since 2018/7/18 0:34
  */
 @Slf4j
-@Controller
 @NeedLogin
+@RestController
 @RequestMapping(path = "/sys/dept")
 public class SysDeptController extends BaseController {
 
-    @ResponseBody
-    @RequestMapping(path = "/add")
+    /**
+     * 增加一个部门
+     * @param deptParam
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(path = "/add", method = {RequestMethod.GET, RequestMethod.POST})
     public Result<?> saveDept(@Valid DeptParam deptParam) throws Exception {
         sysDeptService.add(deptParam);
 
         return Result.success(null);
+    }
+
+    @RequestMapping(path = "/update", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result<?> updateDept(@Valid DeptParam deptParam) throws Exception {
+        sysDeptService.update(deptParam);
+
+        return Result.success(null);
+    }
+
+    /**
+     * 获得部门树
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(path = "/tree", method = {RequestMethod.GET, RequestMethod.POST})
+    public Result<?> tree() throws Exception {
+
+        return Result.success(sysTreeService.deptTree());
     }
 
 }

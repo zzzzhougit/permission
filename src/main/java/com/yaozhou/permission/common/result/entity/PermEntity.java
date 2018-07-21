@@ -24,7 +24,10 @@ public interface PermEntity {
      * 资源冲突异常
      * code: 40000xx
      */
+    //资源冲突
     public static final int CODE_RESOURCE_CONFLICT = 4000001;
+    //资源不存在
+    public static final int CODE_RESOURCE_NOT_EXIST = 4000002;
 
     //====================================================================
 

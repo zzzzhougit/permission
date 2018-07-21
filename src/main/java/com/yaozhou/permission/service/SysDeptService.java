@@ -15,4 +15,11 @@ public interface SysDeptService {
      */
     public void add(DeptParam deptParam) throws Exception;
 
+    /**
+     * 更新一个部门
+     * @param deptParam
+     * @throws Exception
+     */
+    public void update(DeptParam deptParam) throws Exception;
+
 }

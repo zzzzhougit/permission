@@ -12,7 +12,7 @@ import org.springframework.context.ApplicationContext;
 public class BaseController {
 
     @Autowired
-    private SysTreeService sysTreeService;
+    protected SysTreeService sysTreeService;
     @Autowired
     protected SysDeptService sysDeptService;
 
