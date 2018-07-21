@@ -1,6 +1,6 @@
-package com.yaozhou.permission.common.message;
+package com.yaozhou.permission.common.result;
 
-import com.yaozhou.permission.common.message.entity.ExceptionEntity;
+import com.yaozhou.permission.common.result.entity.PermEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,7 +30,7 @@ public class Result<T> {
         return new Result<T>(true, "", 0, data);
     }
 
-    public static <T> Result<T> error(ExceptionEntity exceptionEntity) {
+    public static <T> Result<T> error(PermEntity exceptionEntity) {
         return new Result<T>(false, exceptionEntity.getMessage(), exceptionEntity.getCode(), null);
     }
 

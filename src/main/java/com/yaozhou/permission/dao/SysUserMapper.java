@@ -12,10 +12,6 @@ public interface SysUserMapper {
 
     SysUser selectByPrimaryKey(Integer userId);
 
-    int updateByExampleSelective(@Param("record") SysUser record, @Param("example") SysUserExample example);
-
-    int updateByExample(@Param("record") SysUser record, @Param("example") SysUserExample example);
-
     int updateByPrimaryKeySelective(SysUser record);
 
     int updateByPrimaryKey(SysUser record);

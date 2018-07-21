@@ -19,7 +19,13 @@
     operate_ip
   </sql>
 
-  <select id="selectLevelByPrimaryKey" parameterType="java.lang.Integer" resultMap="java.lang.String">
+  <select id="getAllDept" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_dept
+  </select>
+  
+  <select id="selectLevelByPrimaryKey" parameterType="java.lang.Integer" resultType="java.lang.String">
     select level from sys_dept
     where dept_id = #{deptId,jdbcType=INTEGER}
   </select>

@@ -1,4 +1,4 @@
-package com.yaozhou.permission.common.message.entity;
+package com.yaozhou.permission.common.result.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class ViewMessage implements ExceptionEntity {
+public class ViewMessage implements PermEntity {
 
     private int code;
     private String message;

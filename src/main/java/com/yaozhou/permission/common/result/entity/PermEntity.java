@@ -1,11 +1,11 @@
-package com.yaozhou.permission.common.message.entity;
+package com.yaozhou.permission.common.result.entity;
 
 /**
  * 错误消息和错误码
  * @author Yao.Zhou
  * @since 2018/7/17 22:14
  */
-public interface ExceptionEntity {
+public interface PermEntity {
 
     /**
      * 参数校验异常

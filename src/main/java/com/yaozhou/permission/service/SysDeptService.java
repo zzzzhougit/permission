@@ -1,64 +1,18 @@
 package com.yaozhou.permission.service;
 
-import com.yaozhou.permission.common.exception.PermException;
-import com.yaozhou.permission.common.message.entity.CodeMessage;
-import com.yaozhou.permission.common.message.entity.ExceptionEntity;
-import com.yaozhou.permission.dao.SysDeptMapper;
-import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.params.DeptParam;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import static com.yaozhou.permission.common.message.entity.ExceptionEntity.*;
-import static com.yaozhou.permission.util.LevelUtil.calculateLevel;
 
 /**
  * @author Yao.Zhou
- * @since 2018/7/21 15:48
+ * @since 2018/7/21 20:52
  */
-@Service
-public class SysDeptService {
-
-    @Autowired
-    private SysDeptMapper sysDeptMappr;
-
-    public void save(DeptParam deptParam) throws Exception {
-        if (exist(deptParam.getParentId(), deptParam.getName(), deptParam.getDeptId())) {
-            throw new PermException(CodeMessage.create(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门"));
-        }
-
-        SysDept sysDept = SysDept
-                                .builder()
-                                .seq(deptParam.getSeq())
-                                .name(deptParam.getName())
-                                .remark(deptParam.getRemark())
-                                .parentId(deptParam.getParentId())
-                                //TODO
-                                .operator("System")
-                                .operateIp("127.0.0.1")
-                                .level(
-                                    calculateLevel(
-                                        sysDeptMappr.selectLevelByPrimaryKey(deptParam.getParentId()), deptParam.getParentId()
-                                    )
-                                )
-                                .build();
-
-        sysDeptMappr.insert(sysDept);
-    }
-
-    //===================================
+public interface SysDeptService {
 
     /**
-     * 检查部门是否存在
-     * @param parentId
-     * @param deptName
-     * @param deptId
-     * @return
+     * 保存一个部门
+     * @param deptParam
+     * @throws Exception
      */
-    private boolean exist(Integer parentId, String deptName, Integer deptId) {
-        //TODO
-
-        return true;
-    }
+    public void add(DeptParam deptParam) throws Exception;
 
 }

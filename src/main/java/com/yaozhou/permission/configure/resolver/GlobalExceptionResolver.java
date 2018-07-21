@@ -1,16 +1,18 @@
-package com.yaozhou.permission.configure;
+package com.yaozhou.permission.configure.resolver;
 
 import com.yaozhou.permission.common.exception.PermException;
-import com.yaozhou.permission.common.message.Result;
-import com.yaozhou.permission.common.message.entity.CodeMessage;
-import com.yaozhou.permission.common.message.entity.ExceptionEntity;
-import com.yaozhou.permission.common.message.entity.ViewMessage;
+import com.yaozhou.permission.common.result.Result;
+import com.yaozhou.permission.common.result.entity.CodeMessage;
+import com.yaozhou.permission.common.result.entity.PermEntity;
+import com.yaozhou.permission.common.result.entity.ViewMessage;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.thymeleaf.context.WebContext;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,12 +23,15 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2018/7/17 22:34
  */
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionResolver  {
+
+    @Autowired
+    protected ThymeleafViewResolver thymeleafViewResolver;
 
     @ExceptionHandler( value = {Exception.class} )
     public Object exceptionHandler(Model model, HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        ExceptionEntity exceptionEntity = null;
+        PermEntity exceptionEntity = null;
 
         //参数绑定异常
         if (exception instanceof BindException) {
@@ -46,14 +51,20 @@ public class GlobalExceptionResolver  {
         }
 
         if (exceptionEntity instanceof ViewMessage) {
+            ViewMessage viewMessage = (ViewMessage) exceptionEntity;
             model.addAttribute("codeMessage", exceptionEntity);
-            //TODO path?
 
-            return model;
+            return renderViewPage(request, response, model, viewMessage.getPath());
         } else {
 
             return Result.error(exceptionEntity);
         }
+    }
+
+    private String renderViewPage(HttpServletRequest request, HttpServletResponse response, Model model, String path) {
+        WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale(), model.asMap());
+
+        return thymeleafViewResolver.getTemplateEngine().process(path, webContext);
     }
 
 }

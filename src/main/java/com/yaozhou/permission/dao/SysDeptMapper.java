@@ -2,6 +2,8 @@ package com.yaozhou.permission.dao;
 
 import com.yaozhou.permission.model.SysDept;
 
+import java.util.List;
+
 public interface SysDeptMapper {
 
     int deleteByPrimaryKey(Integer deptId);
@@ -17,4 +19,7 @@ public interface SysDeptMapper {
     int updateByPrimaryKeySelective(SysDept record);
 
     int updateByPrimaryKey(SysDept record);
+
+    List<SysDept> getAllDept();
+
 }
