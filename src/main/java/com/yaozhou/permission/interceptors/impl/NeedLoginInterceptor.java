@@ -7,7 +7,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
@@ -19,7 +18,7 @@ public class NeedLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!needsIntercept(handler)) {
+        if (!needLoginPresent(handler)) {
             return true;
         }
 
@@ -30,19 +29,19 @@ public class NeedLoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (needsIntercept(handler)) {
-
+        if (!needLoginPresent(handler)) {
+            return ;
         }
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (needsIntercept(handler)) {
-
+        if (!needLoginPresent(handler)) {
+            return ;
         }
     }
 
-    private static boolean needsIntercept(Object handler) {
+    private static boolean needLoginPresent(Object handler) {
         HandlerMethod handlerMethod = (HandlerMethod) handler;
 
         Method method = handlerMethod.getMethod();
