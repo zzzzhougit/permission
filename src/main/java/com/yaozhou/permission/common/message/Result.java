@@ -1,6 +1,8 @@
 package com.yaozhou.permission.common.message;
 
-import com.yaozhou.permission.common.message.entity.CodeMessage;
+import com.yaozhou.permission.common.message.entity.ExceptionEntity;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 接口返回消息
@@ -8,6 +10,8 @@ import com.yaozhou.permission.common.message.entity.CodeMessage;
  * @author Yao.Zhou
  * @since 2018/7/17 22:06
  */
+@Getter
+@Setter
 public class Result<T> {
 
     private T data;
@@ -26,40 +30,8 @@ public class Result<T> {
         return new Result<T>(true, "", 0, data);
     }
 
-    public static <T> Result<T> error(CodeMessage codeMessage) {
-        return new Result<T>(false, codeMessage.getMessage(), codeMessage.getCode(), null);
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public T getData() {
-        return data;
-    }
-
-    public void setData(T data) {
-        this.data = data;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public static <T> Result<T> error(ExceptionEntity exceptionEntity) {
+        return new Result<T>(false, exceptionEntity.getMessage(), exceptionEntity.getCode(), null);
     }
 
 }

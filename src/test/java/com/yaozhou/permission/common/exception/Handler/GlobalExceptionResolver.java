@@ -4,7 +4,8 @@ import com.yaozhou.permission.common.exception.DefaultPermException;
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.message.Result;
 import com.yaozhou.permission.common.message.entity.CodeMessage;
-import com.yaozhou.permission.common.message.entity.DefaultCodeMessage;
+import com.yaozhou.permission.common.message.entity.ExceptionEntity;
+import com.yaozhou.permission.common.message.entity.ViewMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.Model;
@@ -26,12 +27,12 @@ public class GlobalExceptionResolver  {
 
     @ExceptionHandler( value = {Exception.class} )
     public Object exceptionHandler(Model model, HttpServletRequest request, HttpServletResponse response, Exception exception) {
-        CodeMessage codeMessage = null;
+        ExceptionEntity codeMessage = null;
 
         //参数绑定异常
         if (exception instanceof BindException) {
             BindException bindException = (BindException) exception;
-            codeMessage = new DefaultCodeMessage(DefaultCodeMessage.CODE_ARGE_ERROR, bindException.getAllErrors().get(0).getDefaultMessage());
+            codeMessage = new CodeMessage(CodeMessage.CODE_ARGE_ERROR, bindException.getAllErrors().get(0).getDefaultMessage());
 
         //项目自定义异常
         } else if (exception instanceof PermException) {
@@ -42,28 +43,18 @@ public class GlobalExceptionResolver  {
         //其他未定义异常统一是服务器异常
         } else {
             log.error(exception.getMessage(), exception);
-            codeMessage = DefaultCodeMessage.SERVER_ERROR;
+            codeMessage = CodeMessage.SERVER_ERROR;
         }
 
-        if (isAjaxRequest(request)) {
+        if (codeMessage instanceof ViewMessage) {
             model.addAttribute("codeMessage", codeMessage);
+            //TODO path?
 
             return model;
         } else {
 
             return Result.error(codeMessage);
         }
-    }
-
-    public static boolean isAjaxRequest(HttpServletRequest request) {
-        String x_requested_with = request.getHeader("x-requested-with");
-
-        if (!StringUtils.isBlank(x_requested_with) && x_requested_with.equals("XMLHttpRequest")) {
-
-            return true;
-        }
-
-        return false;
     }
 
 }

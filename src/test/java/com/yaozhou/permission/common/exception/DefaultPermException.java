@@ -12,7 +12,7 @@ public class DefaultPermException extends PermException {
 
     private CodeMessage codeMessage;
 
-    private DefaultPermException(String message) {
+    public DefaultPermException(String message) {
         super(message);
     }
 
@@ -25,4 +25,5 @@ public class DefaultPermException extends PermException {
     public CodeMessage getCodeMessage() {
         return this.codeMessage;
     }
+
 }
