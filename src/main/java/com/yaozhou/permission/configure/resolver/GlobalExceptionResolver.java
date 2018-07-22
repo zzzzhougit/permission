@@ -58,8 +58,11 @@ public class GlobalExceptionResolver  {
             ViewMessage viewMessage = (ViewMessage) exceptionEntity;
             model.addAttribute("codeMessage", exceptionEntity);
 
+            response.setContentType("text/html; charset=UTF-8");
+
             return renderViewPage(request, response, model, viewMessage.getPath());
         } else {
+            response.setContentType("application/json; charset=UTF-8");
 
             return Result.error(exceptionEntity);
         }

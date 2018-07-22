@@ -73,6 +73,11 @@ public class SysUserServiceImpl implements SysUserService {
         updateUser(after);
     }
 
+    @Override
+    public SysUser selectByUsername(String username) {
+        return null;
+    }
+
     //============================================
 
     /**
@@ -134,6 +139,9 @@ public class SysUserServiceImpl implements SysUserService {
                 } else if (sysUser.getMail().equals(after.getMail())) {
 
                     throw new PermException(CODE_RESOURCE_CONFLICT, "邮箱已被使用");
+                } else if(sysUser.getUsername().equals(after.getUsername())) {
+
+                    throw new PermException(CODE_RESOURCE_CONFLICT, "用户名已被使用");
                 }
             }
         } //end outer if

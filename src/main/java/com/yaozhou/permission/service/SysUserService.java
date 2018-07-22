@@ -1,5 +1,6 @@
 package com.yaozhou.permission.service;
 
+import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.params.UserParam;
 import com.yaozhou.permission.status.StatusCode;
 
@@ -20,5 +21,12 @@ public interface SysUserService extends StatusCode {
      * @param userParam
      */
     public void update(UserParam userParam);
+
+    /**
+     * 根据用户名查询唯一用户
+     * @param username
+     * @return
+     */
+    public SysUser selectByUsername(String username);
 
 }

@@ -23,14 +23,37 @@
   </sql>
 
   <select id="fetchSysUserBySameProperties" parameterType="map" resultMap="BaseResultMap">
-    select
-    <include refid="Base_Column_List" />
-    from sys_user
-    where ( mail = #{sysUser.mail,jdbcType=VARCHAR}
-    or telephone = #{sysUser.telephone,jdbcType=VARCHAR} )
-    <if test="sysUser.userId != null">
-      and user_id != #{sysUser.userId,jdbcType=INTEGER}
-    </if>
+    SELECT
+	<include refid="Base_Column_List"/>
+    FROM
+        sys_user AS u
+    RIGHT JOIN (
+        SELECT
+            user_id AS ids
+        FROM
+            sys_user
+        WHERE
+            mail = #{sysUser.mail,jdbcType=VARCHAR}
+        UNION
+            SELECT
+                user_id AS ids
+            FROM
+                sys_user
+            WHERE
+                telephone = #{sysUser.telephone,jdbcType=VARCHAR}
+            UNION
+                SELECT
+                    user_id AS ids
+                FROM
+                    sys_user
+                WHERE
+                    username = #{sysUser.username,jdbcType=VARCHAR}
+    ) AS t ON u.user_id = t.ids
+    WHERE
+        u.user_id IS NOT NULL
+        <if test="sysUser.userId != null">
+          AND u.user_id != #{sysUser.userId,jdbcType=INTEGER}
+        </if>
   </select>
 
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
