@@ -1,6 +1,5 @@
 package com.yaozhou.permission.service.impl;
 
-import com.google.common.hash.Hashing;
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.mapper.SysUserMapper;
 import com.yaozhou.permission.model.SysDept;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
