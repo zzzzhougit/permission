@@ -2,6 +2,7 @@ package com.yaozhou.permission.controllers;
 
 import com.yaozhou.permission.service.SysDeptService;
 import com.yaozhou.permission.service.SysTreeService;
+import com.yaozhou.permission.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
@@ -15,6 +16,8 @@ public class BaseController {
     protected SysTreeService sysTreeService;
     @Autowired
     protected SysDeptService sysDeptService;
+    @Autowired
+    protected SysUserService sysUserService;
 
     @Autowired
     protected ApplicationContext applicationContext;

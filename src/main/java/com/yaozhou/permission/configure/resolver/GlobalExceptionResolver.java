@@ -49,8 +49,9 @@ public class GlobalExceptionResolver  {
 
         //其他未定义异常统一是服务器异常
         } else {
-            log.error(exception.getMessage(), exception);
             exceptionEntity = CodeMessage.SERVER_ERROR;
+
+            log.error(exception.getMessage(), exception);
         }
 
         if (exceptionEntity instanceof ViewMessage) {

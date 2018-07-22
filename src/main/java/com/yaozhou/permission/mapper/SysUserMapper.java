@@ -1,8 +1,12 @@
 package com.yaozhou.permission.mapper;
 
 import com.yaozhou.permission.model.SysUser;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface SysUserMapper {
+
     int deleteByPrimaryKey(Integer userId);
 
     int insert(SysUser record);
@@ -14,4 +18,12 @@ public interface SysUserMapper {
     int updateByPrimaryKeySelective(SysUser record);
 
     int updateByPrimaryKey(SysUser record);
+
+    /**
+     * 根据用户邮箱或者手机号码查找用户集
+     * @param sysUser
+     * @return
+     */
+    public List<SysUser> fetchSysUserBySameProperties(@Param("sysUser") SysUser sysUser);
+
 }

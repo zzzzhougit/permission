@@ -48,11 +48,4 @@ public interface SysDeptMapper {
      */
     public void batchUpdateByPrimaryKeySelective(@Param("depts") List<SysDept> sysDepts);
 
-    /**
-     * 根据id查询部门数量
-     * @param deptId
-     * @return
-     */
-    public int getCountByPrimaryKey(@Param("deptId") int deptId);
-
 }

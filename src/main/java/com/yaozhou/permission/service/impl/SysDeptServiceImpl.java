@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +76,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @param after  更新之后的Dept
      * @return
      */
-    private String calculateLevel(SysDept before, SysDept after) {
+    private String calculateLevel(SysDept before, SysDept after) throws PermException {
         String level = null;
         Integer afterParentId = after.getParentId();
 
@@ -87,12 +86,12 @@ public class SysDeptServiceImpl implements SysDeptService {
             parentDept = sysDeptMapper.selectByPrimaryKey(afterParentId);
             if (null == parentDept) {
 
-                throw new PermException(CodeMessage.create(CODE_RESOURCE_NOT_EXIST, "上级部门不存在"));
+                throw new PermException(CODE_RESOURCE_NOT_EXIST, "上级部门不存在");
             } else {
 
                 if (sysDeptMapper.countByNameAndParentId(afterParentId, after.getName(), after.getDeptId()) > 0) {
 
-                    throw new PermException(CodeMessage.create(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门"));
+                    throw new PermException(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门");
                 }
             }
         }

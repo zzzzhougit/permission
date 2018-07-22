@@ -1,12 +1,13 @@
 package com.yaozhou.permission.service;
 
 import com.yaozhou.permission.params.DeptParam;
+import com.yaozhou.permission.status.StatusCode;
 
 /**
  * @author Yao.Zhou
  * @since 2018/7/21 20:52
  */
-public interface SysDeptService {
+public interface SysDeptService extends StatusCode {
 
     /**
      * 保存一个部门

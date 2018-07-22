@@ -1,5 +1,6 @@
 package com.yaozhou.permission.model;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 5962324950971243561L;

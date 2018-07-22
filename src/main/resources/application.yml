@@ -45,7 +45,7 @@ spring:
       maxOpenPreparedStatements: 20
 
 mybatis:
-  type-aliases-package: com.yaozhou.model
+  type-aliases-package: com.yaozhou.permission.model
   mapper-locations: classpath:mapper/*.xml
   configuration:
     map-underscore-to-camel-case: true

@@ -48,6 +48,15 @@
     user_id, username, password, telephone, mail, dept_id, status, remark, create_time, 
     operator, operate_time, operate_ip
   </sql>
+
+  <select id="fetchSysUserBySameProperties" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_user
+    where mail = #{sysUser.mail,jdbcType=VARCHAR}
+    or telephone = #{sysUser.telephone,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

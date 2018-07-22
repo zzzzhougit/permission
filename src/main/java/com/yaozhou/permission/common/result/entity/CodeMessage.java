@@ -22,10 +22,6 @@ public class CodeMessage implements PermEntity {
 
     //======================================
 
-    public static PermEntity create(int code, String message) {
-        return new CodeMessage(code, message);
-    }
-
     public static final CodeMessage SERVER_ERROR = new CodeMessage(CODE_SERVER_ERROR, "服务器异常");
 
 

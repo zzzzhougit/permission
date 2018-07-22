@@ -27,7 +27,7 @@
 		</javaModelGenerator>
 
 		<!-- 生成的映射文件包名和位置 -->
-		<sqlMapGenerator targetPackage="mapper" targetProject="./src/main/resources">
+		<sqlMapGenerator targetPackage="com.yaozhou.permission.mapper.mapper" targetProject="./src/main/resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
