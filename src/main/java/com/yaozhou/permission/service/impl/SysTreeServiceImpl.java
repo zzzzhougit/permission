@@ -2,7 +2,7 @@ package com.yaozhou.permission.service.impl;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
-import com.yaozhou.permission.dao.SysDeptMapper;
+import com.yaozhou.permission.mapper.SysDeptMapper;
 import com.yaozhou.permission.dto.DeptLevelDto;
 import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.service.SysTreeService;

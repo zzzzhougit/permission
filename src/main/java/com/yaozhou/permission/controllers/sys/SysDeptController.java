@@ -6,10 +6,8 @@ import com.yaozhou.permission.interceptors.NeedLogin;
 import com.yaozhou.permission.params.DeptParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -19,9 +17,21 @@ import javax.validation.Valid;
  */
 @Slf4j
 @NeedLogin
-@RestController
+@Controller
 @RequestMapping(path = "/sys/dept")
 public class SysDeptController extends BaseController {
+
+    /**
+     * 部门管理视图
+     * @param model
+     * @return
+     */
+    @GetMapping(path = "view")
+    public Object page(Model model) {
+        return "dept/dept.html";
+    }
+
+    //====================================================
 
     /**
      * 增加一个部门
@@ -29,6 +39,7 @@ public class SysDeptController extends BaseController {
      * @return
      * @throws Exception
      */
+    @ResponseBody
     @RequestMapping(path = "/add", method = {RequestMethod.GET, RequestMethod.POST})
     public Result<?> addDept(@Valid DeptParam deptParam) throws Exception {
         sysDeptService.add(deptParam);
@@ -42,6 +53,7 @@ public class SysDeptController extends BaseController {
      * @return
      * @throws Exception
      */
+    @ResponseBody
     @RequestMapping(path = "/update", method = {RequestMethod.GET, RequestMethod.POST})
     public Result<?> updateDept(@Valid DeptParam deptParam) throws Exception {
         sysDeptService.update(deptParam);
@@ -54,6 +66,7 @@ public class SysDeptController extends BaseController {
      * @return
      * @throws Exception
      */
+    @ResponseBody
     @RequestMapping(path = "/tree", method = {RequestMethod.GET, RequestMethod.POST})
     public Result<?> tree() throws Exception {
 

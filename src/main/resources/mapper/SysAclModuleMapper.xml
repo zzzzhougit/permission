@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yaozhou.permission.dao.SysAclModuleMapper">
+<mapper namespace="com.yaozhou.permission.mapper.SysAclModuleMapper">
   <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysAclModule">
     <id column="acl_module_id" jdbcType="INTEGER" property="aclModuleId" />
     <result column="name" jdbcType="VARCHAR" property="name" />

@@ -41,8 +41,11 @@ public class GlobalExceptionResolver  {
         //项目自定义异常
         } else if (exception instanceof PermException) {
             PermException permException = (PermException) exception;
-            log.error(permException.getExceptionEntity().getMessage(), exception);
             exceptionEntity = permException.getExceptionEntity();
+
+            if (log.isDebugEnabled()) {
+                log.error(permException.getExceptionEntity().getMessage(), exception);
+            }
 
         //其他未定义异常统一是服务器异常
         } else {

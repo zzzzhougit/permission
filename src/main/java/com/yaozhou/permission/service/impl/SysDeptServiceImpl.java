@@ -2,7 +2,7 @@ package com.yaozhou.permission.service.impl;
 
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.result.entity.CodeMessage;
-import com.yaozhou.permission.dao.SysDeptMapper;
+import com.yaozhou.permission.mapper.SysDeptMapper;
 import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.params.DeptParam;
 import com.yaozhou.permission.service.SysDeptService;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,11 +33,6 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Override
     public void update(DeptParam deptParam) throws Exception {
         SysDept before = sysDeptMapper.selectByPrimaryKey(deptParam.getDeptId());
-        if (null == before) {
-            throw new PermException(CodeMessage.create(CODE_RESOURCE_NOT_EXIST, "部门不存在"));
-        } else if (exist(deptParam.getParentId(), deptParam.getName(), deptParam.getDeptId())) {
-            throw new PermException(CodeMessage.create(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门"));
-        }
 
         SysDept after = SysDept
                             .builder()
@@ -44,26 +40,20 @@ public class SysDeptServiceImpl implements SysDeptService {
                             .parentId(deptParam.getParentId())
                             .seq(deptParam.getSeq())
                             .remark(deptParam.getRemark())
-
                             .deptId(before.getDeptId())
+
                             //TODO
                             .operator("System")
                             .operateIp("127.0.0.1")
                             .operateTime(new Date())
-                            .level(
-                                calculateLevel(deptParam.getParentId())
-                            )
                             .build();
+        after.setLevel(calculateLevel(before, after));
 
         updateWithChild(before, after);
     }
 
     @Override
     public void add(DeptParam deptParam) throws Exception {
-        if (exist(deptParam.getParentId(), deptParam.getName(), deptParam.getDeptId())) {
-            throw new PermException(CodeMessage.create(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门"));
-        }
-
         SysDept sysDept = SysDept
                                 .builder()
                                 .seq(deptParam.getSeq())
@@ -73,15 +63,65 @@ public class SysDeptServiceImpl implements SysDeptService {
                                 //TODO
                                 .operator("System")
                                 .operateIp("127.0.0.1")
-                                .level(
-                                    calculateLevel(deptParam.getParentId())
-                                )
                                 .build();
+        sysDept.setLevel(calculateLevel(null, sysDept));
 
         sysDeptMapper.insertSelective(sysDept);
     }
 
     //===================================
+
+    /**
+     * 计算Level值
+     * @param before 更新之前的Dept, 如果是新加, before = null
+     * @param after  更新之后的Dept
+     * @return
+     */
+    private String calculateLevel(SysDept before, SysDept after) {
+        String level = null;
+        Integer afterParentId = after.getParentId();
+
+        //查询上级部门
+        SysDept parentDept = null;
+        if (null != afterParentId && afterParentId > 0) {
+            parentDept = sysDeptMapper.selectByPrimaryKey(afterParentId);
+            if (null == parentDept) {
+
+                throw new PermException(CodeMessage.create(CODE_RESOURCE_NOT_EXIST, "上级部门不存在"));
+            } else {
+
+                if (sysDeptMapper.countByNameAndParentId(afterParentId, after.getName(), after.getDeptId()) > 0) {
+
+                    throw new PermException(CodeMessage.create(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门"));
+                }
+            }
+        }
+
+        //新增dept
+        if (null == before) {
+            if (null != afterParentId && afterParentId > 0) {
+
+                level = LevelUtil.calculateLevel(parentDept.getLevel(), afterParentId);
+            } else {
+
+                level = LevelUtil.ROOT;
+            }
+
+        //更新
+        } else {
+            //after的parenntId为空或者和before一致, 表示不更新parent
+            if (null == afterParentId || afterParentId.equals(before.getParentId())) {
+                level =  before.getLevel();
+
+            //重新计算level
+            } else {
+                level = LevelUtil.calculateLevel(parentDept.getLevel(), afterParentId);
+            }
+
+        }
+
+        return level;
+    }
 
     /**
      * 更新父SysDept可能需要同时更新子SysDept
@@ -90,11 +130,12 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     @Transactional(isolation = Isolation.READ_COMMITTED)
     private void updateWithChild(SysDept before, SysDept after) {
+        List<SysDept> sysDeptAfter = new LinkedList<>();
+
         //如果更新了level, 需要更新子部门的level
         if (!before.getLevel().equals(after.getLevel())) {
             List<SysDept> childrenSysDept = sysDeptMapper.getChildrenDeptByLevel(before.getLevel());
             if (!CollectionUtils.isEmpty(childrenSysDept)) {
-                List<SysDept> childrenSysDeptAfter = new LinkedList<>(); //children to be update
 
                 for (SysDept ch : childrenSysDept) {
                     if (ch.getLevel().indexOf(before.getLevel()) == 0) {
@@ -109,44 +150,16 @@ public class SysDeptServiceImpl implements SysDeptService {
                                             .operateTime(after.getOperateTime())
                                             .build();
 
-                        childrenSysDeptAfter.add(chAfter);
+                        sysDeptAfter.add(chAfter);
                     } //end if
                 }
-
-                //update children
-                sysDeptMapper.batchUpdateByPrimaryKeySelective(childrenSysDeptAfter);
             }
+        } //end outer if
+
+        if (sysDeptAfter.size() > 0) {
+            sysDeptAfter.add(after);
         }
-
-        sysDeptMapper.updateByPrimaryKeySelective(after);
-
-    }
-
-    /**
-     * 根据Parent计算Level
-     * @param parentId
-     * @return
-     */
-    private String calculateLevel(Integer parentId) {
-        if (null == parentId) {
-
-            return LevelUtil.calculateLevel(null, 0);
-        }
-
-        return LevelUtil.calculateLevel(
-                    sysDeptMapper.selectLevelByPrimaryKey(parentId), parentId
-                );
-    }
-
-    /**
-     * 检查部门是否存在
-     * @param parentId
-     * @param deptName
-     * @param deptId
-     * @return
-     */
-    private boolean exist(Integer parentId, String deptName, Integer deptId) {
-        return sysDeptMapper.countByNameAndParentId(parentId, deptName, deptId) > 0;
+        sysDeptMapper.batchUpdateByPrimaryKeySelective(sysDeptAfter);
     }
 
 }
