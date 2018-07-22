@@ -1,5 +1,6 @@
 package com.yaozhou.permission.params;
 
+import com.yaozhou.permission.common.validator.ShortSize;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -35,7 +36,7 @@ public class UserParam {
     private Integer deptId;
 
     @NotNull(message = "用户状态不能为空")
-    @Size(min = 0, max = 2, message = "用户状态不合法")
+    @ShortSize(min = 0, max = 2, message = "用户状态不合法")
     private Short status;
 
     @Size(min = 0, max = 200, message = "备注长度必须在200个字以内")

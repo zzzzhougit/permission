@@ -1,8 +1,11 @@
 package com.yaozhou.permission.util;
 
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
 import org.springframework.util.Assert;
+import sun.security.provider.MD5;
 
-import javax.validation.constraints.AssertTrue;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Random;
@@ -37,6 +40,28 @@ public class PassWordUtil {
 
     static {
         Assert.isTrue(PWD_MIN_LEN - NUM_LEN > NUM_LEN, "密码生成规则中数字长度必须小于总长度的一半");
+    }
+
+    /**
+     * 根据盐值加密密码
+     * @return
+     */
+    public static String encodePassword(String password, String salt) {
+        String input = password + salt;
+        for (int i = 0; i < 50; i++) {
+            input = Hashing.md5().newHasher().putString(input, StandardCharsets.UTF_8).hash().toString();
+        }
+
+        return input;
+    }
+
+    /**
+     * 随机生成一个盐值
+     * @return
+     */
+    public static String randomSalt() {
+
+       return Hashing.md5().newHasher().putLong(System.currentTimeMillis()).hash().toString().substring(0, 10);
     }
 
     /**
@@ -75,12 +100,8 @@ public class PassWordUtil {
     }
 
     public static void main(String[] args) {
-        for (int i = 0; i < 10000; i++) {
-            String pwd = randomPassword();
-            if (pwd.length() == PWD_MAX_LEN) {
-                System.out.println(pwd);
-            }
-        }
+        System.out.println(randomSalt());
+        System.out.println(randomPassword());
     }
 
 }

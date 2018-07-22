@@ -1,8 +1,6 @@
 package com.yaozhou.permission.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -10,6 +8,9 @@ import java.util.Date;
 @Getter
 @Setter
 @Builder
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysUser implements Serializable {
 
     private static final long serialVersionUID = 5962324950971243561L;
@@ -17,6 +18,8 @@ public class SysUser implements Serializable {
     private Integer userId;
 
     private String username;
+
+    private String salt;
 
     private String password;
 

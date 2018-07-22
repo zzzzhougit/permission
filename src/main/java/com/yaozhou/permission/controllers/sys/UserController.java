@@ -9,10 +9,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.validation.Valid;
+
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
+ * 用户管理
  * @author Yao.Zhou
  * @since 2018/7/22 16:49
  */
@@ -29,7 +32,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(path = "/add", method = {GET, POST})
-    public Result<?> add(UserParam userParam) {
+    public Result<?> add(@Valid UserParam userParam) {
         sysUserService.add(userParam);
 
         return Result.success(null);
@@ -42,7 +45,7 @@ public class UserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(path = "/update", method = {GET, POST})
-    public Result<?> update(UserParam userParam) {
+    public Result<?> update(@Valid UserParam userParam) {
         sysUserService.update(userParam);
 
         return Result.success(null);

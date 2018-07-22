@@ -33,36 +33,39 @@ public class SysDeptServiceImpl implements SysDeptService {
     public void update(DeptParam deptParam) throws Exception {
         SysDept before = sysDeptMapper.selectByPrimaryKey(deptParam.getDeptId());
 
-        SysDept after = SysDept
-                            .builder()
-                            .name(deptParam.getName())
-                            .parentId(deptParam.getParentId())
-                            .seq(deptParam.getSeq())
-                            .remark(deptParam.getRemark())
-                            .deptId(before.getDeptId())
+        SysDept after = SysDept.builder()
+            .name(deptParam.getName())
+            .parentId(deptParam.getParentId())
+            .seq(deptParam.getSeq())
+            .remark(deptParam.getRemark())
+            .deptId(before.getDeptId())
 
-                            //TODO
-                            .operator("System")
-                            .operateIp("127.0.0.1")
-                            .operateTime(new Date())
-                            .build();
+            //TODO
+            .operator("System")
+            .operateIp("127.0.0.1")
+            .operateTime(new Date())
+            .build();
         after.setLevel(calculateLevel(before, after));
 
         updateWithChild(before, after);
     }
 
     @Override
+    public SysDept selectByPrimaryKey(int deptId) {
+        return sysDeptMapper.selectByPrimaryKey(deptId);
+    }
+
+    @Override
     public void add(DeptParam deptParam) throws Exception {
-        SysDept sysDept = SysDept
-                                .builder()
-                                .seq(deptParam.getSeq())
-                                .name(deptParam.getName())
-                                .remark(deptParam.getRemark())
-                                .parentId(deptParam.getParentId())
-                                //TODO
-                                .operator("System")
-                                .operateIp("127.0.0.1")
-                                .build();
+        SysDept sysDept = SysDept.builder()
+            .seq(deptParam.getSeq())
+            .name(deptParam.getName())
+            .remark(deptParam.getRemark())
+            .parentId(deptParam.getParentId())
+            //TODO
+            .operator("System")
+            .operateIp("127.0.0.1")
+            .build();
         sysDept.setLevel(calculateLevel(null, sysDept));
 
         sysDeptMapper.insertSelective(sysDept);
@@ -140,14 +143,13 @@ public class SysDeptServiceImpl implements SysDeptService {
                     if (ch.getLevel().indexOf(before.getLevel()) == 0) {
                         String newLevel = after.getLevel() + ch.getLevel().substring(before.getLevel().length());
 
-                        SysDept chAfter = SysDept
-                                            .builder()
-                                            .deptId(ch.getDeptId())
-                                            .level(newLevel)
-                                            .operateIp(after.getOperateIp())
-                                            .operator(after.getOperator())
-                                            .operateTime(after.getOperateTime())
-                                            .build();
+                        SysDept chAfter = SysDept.builder()
+                            .deptId(ch.getDeptId())
+                            .level(newLevel)
+                            .operateIp(after.getOperateIp())
+                            .operator(after.getOperator())
+                            .operateTime(after.getOperateTime())
+                            .build();
 
                         sysDeptAfter.add(chAfter);
                     } //end if

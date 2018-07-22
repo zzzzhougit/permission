@@ -1,5 +1,6 @@
 package com.yaozhou.permission.service;
 
+import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.params.DeptParam;
 import com.yaozhou.permission.status.StatusCode;
 
@@ -22,5 +23,12 @@ public interface SysDeptService extends StatusCode {
      * @throws Exception
      */
     public void update(DeptParam deptParam) throws Exception;
+
+    /**
+     * 根据deptId查询部门
+     * @param deptId
+     * @return
+     */
+    public SysDept selectByPrimaryKey(int deptId);
 
 }

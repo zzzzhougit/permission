@@ -21,6 +21,7 @@ public interface SysUserMapper {
 
     /**
      * 根据用户邮箱或者手机号码查找用户集
+     * 如果用户userId不为空, 排除自己
      * @param sysUser
      * @return
      */
