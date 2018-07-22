@@ -27,7 +27,7 @@ public class SysDeptController extends BaseController {
      * @return
      */
     @GetMapping(path = "view")
-    public Object page(Model model) {
+    public Object view(Model model) {
         return "dept/dept.html";
     }
 
