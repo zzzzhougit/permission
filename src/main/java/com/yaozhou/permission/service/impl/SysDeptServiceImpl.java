@@ -30,6 +30,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     private SysDeptMapper sysDeptMapper;
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void update(DeptParam deptParam) throws Exception {
         SysDept before = sysDeptMapper.selectByPrimaryKey(deptParam.getDeptId());
 
@@ -56,6 +57,7 @@ public class SysDeptServiceImpl implements SysDeptService {
     }
 
     @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
     public void add(DeptParam deptParam) throws Exception {
         SysDept sysDept = SysDept.builder()
             .seq(deptParam.getSeq())
@@ -130,7 +132,6 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @param before
      * @param after
      */
-    @Transactional(isolation = Isolation.READ_COMMITTED)
     private void updateWithChild(SysDept before, SysDept after) {
         List<SysDept> sysDeptAfter = new LinkedList<>();
 
