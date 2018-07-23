@@ -1,9 +1,7 @@
 package com.yaozhou.permission.util;
 
-import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
 import org.springframework.util.Assert;
-import sun.security.provider.MD5;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
