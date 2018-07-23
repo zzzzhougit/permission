@@ -1,18 +1,19 @@
 package com.yaozhou.permission.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysAcl implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = -5400375896175706698L;
 
     private Integer aclId;
 

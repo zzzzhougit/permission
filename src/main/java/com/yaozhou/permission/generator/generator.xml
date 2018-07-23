@@ -2,6 +2,7 @@
 <!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 
 <generatorConfiguration>
+
 	<context id="MySQL" targetRuntime="MyBatis3">
 		<!-- generate entity时，生成serialVersionUID -->
 		<plugin type="org.mybatis.generator.plugins.SerializablePlugin" />
@@ -11,36 +12,62 @@
 		</commentGenerator>
 
 		<!-- 数据库链接URL、用户名、密码 -->
-		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/permission?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;useSSL=false&amp;serverTimezone=UTC" userId="root" password="123456">  <!-- 2 -->
+		<jdbcConnection
+				userId="root" password="123456"
+				driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/permission?useUnicode=true&amp;characterEncoding=utf-8&amp;allowMultiQueries=true&amp;useSSL=false&amp;serverTimezone=UTC" >
 		</jdbcConnection>
 		<javaTypeResolver>
 			<property name="forceBigDecimals" value="false" />
 		</javaTypeResolver>
 
 		<!-- 生成模型的包名和位置 -->
-		<javaModelGenerator targetPackage="com.yaozhou.permission.model" targetProject="K:\Git\permission\src">
+		<javaModelGenerator targetPackage="com.yaozhou.permission.model" targetProject="./src/main/java">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<!-- 生成的映射文件包名和位置 -->
-		<sqlMapGenerator targetPackage="com.yaozhou.permission.mapper" targetProject="K:\Git\permission\src">
+		<sqlMapGenerator targetPackage="com.yaozhou.permission.mapper.mapper" targetProject="./src/main/resources">
 			<property name="enableSubPackages" value="true" />
 		</sqlMapGenerator>
 
 		<!-- 生成DAO的包名和位置 -->
-		<javaClientGenerator type="XMLMAPPER" targetPackage="com.yaozhou.permission.dao" targetProject="K:\Git\permission\src">
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.yaozhou.permission.mapper" targetProject="./src/main/java">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
 		<!-- 要生成那些表(更改tableName和domainObjectName就可以) -->
-		<table tableName="sys_user" domainObjectName="SysUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_dept" domainObjectName="SysDept" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_acl" domainObjectName="SysAcl" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_acl_module" domainObjectName="SysAclModule" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_role" domainObjectName="SysRole" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_role_acl" domainObjectName="SysRoleAcl" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_role_user" domainObjectName="SysRoleUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
-		<table tableName="sys_log" domainObjectName="SysLog" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+		<table tableName="sys_user" domainObjectName="SysUser"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="true" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_dept" domainObjectName="SysDept"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_acl" domainObjectName="SysAcl"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_acl_module" domainObjectName="SysAclModule"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_role" domainObjectName="SysRole"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_role_acl" domainObjectName="SysRoleAcl"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_role_user" domainObjectName="SysRoleUser"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
+		<table tableName="sys_log" domainObjectName="SysLog"
+			   enableSelectByPrimaryKey="true" enableDeleteByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			   enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false"
+		/>
 	</context>
 </generatorConfiguration>

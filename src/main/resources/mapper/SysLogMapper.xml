@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yaozhou.permission.dao.SysLogMapper">
+<mapper namespace="com.yaozhou.permission.mapper.SysLogMapper">
   <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysLog">
-    <result column="log_id" jdbcType="INTEGER" property="logId" />
+    <id column="log_id" jdbcType="INTEGER" property="logId" />
     <result column="type" jdbcType="SMALLINT" property="type" />
     <result column="target_id" jdbcType="INTEGER" property="targetId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -15,9 +15,24 @@
     <result column="old_value" jdbcType="LONGVARCHAR" property="oldValue" />
     <result column="new_value" jdbcType="LONGVARCHAR" property="newValue" />
   </resultMap>
+  <sql id="Base_Column_List">
+    log_id, type, target_id, create_time, operate_time, operator, operate_ip, status
+  </sql>
   <sql id="Blob_Column_List">
     old_value, new_value
   </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_log
+    where log_id = #{logId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.yaozhou.permission.model.SysLogWithBLOBs">
     insert into sys_log (log_id, type, target_id, 
       create_time, operate_time, operator, 
@@ -95,4 +110,61 @@
       </if>
     </trim>
   </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.yaozhou.permission.model.SysLogWithBLOBs">
+    update sys_log
+    <set>
+      <if test="type != null">
+        type = #{type,jdbcType=SMALLINT},
+      </if>
+      <if test="targetId != null">
+        target_id = #{targetId,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null">
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="oldValue != null">
+        old_value = #{oldValue,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="newValue != null">
+        new_value = #{newValue,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.yaozhou.permission.model.SysLogWithBLOBs">
+    update sys_log
+    set type = #{type,jdbcType=SMALLINT},
+      target_id = #{targetId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_ip = #{operateIp,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT},
+      old_value = #{oldValue,jdbcType=LONGVARCHAR},
+      new_value = #{newValue,jdbcType=LONGVARCHAR}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yaozhou.permission.model.SysLog">
+    update sys_log
+    set type = #{type,jdbcType=SMALLINT},
+      target_id = #{targetId,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_ip = #{operateIp,jdbcType=VARCHAR},
+      status = #{status,jdbcType=SMALLINT}
+    where log_id = #{logId,jdbcType=INTEGER}
+  </update>
 </mapper>

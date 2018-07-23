@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yaozhou.permission.dao.SysUserMapper">
+<mapper namespace="com.yaozhou.permission.mapper.SysUserMapper">
   <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysUser">
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="slat" jdbcType="VARCHAR" property="salt"/>
     <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="mail" jdbcType="VARCHAR" property="mail" />
     <result column="dept_id" jdbcType="INTEGER" property="deptId" />
@@ -15,13 +16,63 @@
     <result column="operate_time" jdbcType="TIMESTAMP" property="operateTime" />
     <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
   </resultMap>
+
+  <sql id="Base_Column_List">
+    user_id, username, password, salt, telephone, mail, dept_id, status, remark, create_time,
+    operator, operate_time, operate_ip
+  </sql>
+
+  <select id="fetchSysUserBySameProperties" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+	<include refid="Base_Column_List"/>
+    FROM
+        sys_user AS u
+    RIGHT JOIN (
+        SELECT
+            user_id AS ids
+        FROM
+            sys_user
+        WHERE
+            mail = #{sysUser.mail,jdbcType=VARCHAR}
+        UNION
+            SELECT
+                user_id AS ids
+            FROM
+                sys_user
+            WHERE
+                telephone = #{sysUser.telephone,jdbcType=VARCHAR}
+            UNION
+                SELECT
+                    user_id AS ids
+                FROM
+                    sys_user
+                WHERE
+                    username = #{sysUser.username,jdbcType=VARCHAR}
+    ) AS t ON u.user_id = t.ids
+    WHERE
+        u.user_id IS NOT NULL
+        <if test="sysUser.userId != null">
+          AND u.user_id != #{sysUser.userId,jdbcType=INTEGER}
+        </if>
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.yaozhou.permission.model.SysUser">
-    insert into sys_user (user_id, username, password, 
+    insert into sys_user (user_id, username, password, salt,
       telephone, mail, dept_id, 
       status, remark, create_time, 
       operator, operate_time, operate_ip
       )
-    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+    values (#{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{salt,jdbcType=VARCHAR}
       #{telephone,jdbcType=VARCHAR}, #{mail,jdbcType=VARCHAR}, #{deptId,jdbcType=INTEGER}, 
       #{status,jdbcType=SMALLINT}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{operator,jdbcType=VARCHAR}, #{operateTime,jdbcType=TIMESTAMP}, #{operateIp,jdbcType=VARCHAR}
@@ -38,6 +89,9 @@
       </if>
       <if test="password != null">
         password,
+      </if>
+      <if test="salt != null">
+        salt,
       </if>
       <if test="telephone != null">
         telephone,
@@ -77,6 +131,9 @@
       <if test="password != null">
         #{password,jdbcType=VARCHAR},
       </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
       <if test="telephone != null">
         #{telephone,jdbcType=VARCHAR},
       </if>
@@ -106,4 +163,63 @@
       </if>
     </trim>
   </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.yaozhou.permission.model.SysUser">
+    update sys_user
+    <set>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        password = #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
+      </if>
+      <if test="mail != null">
+        mail = #{mail,jdbcType=VARCHAR},
+      </if>
+      <if test="deptId != null">
+        dept_id = #{deptId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=SMALLINT},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateIp != null">
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yaozhou.permission.model.SysUser">
+    update sys_user
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      salt = #{salt,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
+      mail = #{mail,jdbcType=VARCHAR},
+      dept_id = #{deptId,jdbcType=INTEGER},
+      status = #{status,jdbcType=SMALLINT},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operate_ip = #{operateIp,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
 </mapper>

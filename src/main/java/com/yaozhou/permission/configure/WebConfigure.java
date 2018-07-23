@@ -1,6 +1,8 @@
 package com.yaozhou.permission.configure;
 
 import com.yaozhou.permission.interceptors.impl.NeedLoginInterceptor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -8,6 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author Yao.Zhou
  * @since 2018/7/18 0:16
  */
+@Configuration
 public class WebConfigure implements WebMvcConfigurer {
 
     /**
@@ -16,7 +19,18 @@ public class WebConfigure implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new NeedLoginInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new NeedLoginInterceptor())
+                .addPathPatterns("/**")
+                .pathMatcher(staticPathMatcher());
+    }
+
+    /**
+     * 静态资源过滤
+     * @return
+     */
+    @Bean
+    StaticPathMatcher staticPathMatcher() {
+        return new StaticPathMatcher();
     }
 
 }

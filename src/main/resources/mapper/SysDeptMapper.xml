@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yaozhou.permission.dao.SysDeptMapper">
+<mapper namespace="com.yaozhou.permission.mapper.SysDeptMapper">
   <resultMap id="BaseResultMap" type="com.yaozhou.permission.model.SysDept">
-    <result column="dept_id" jdbcType="INTEGER" property="deptId" />
+    <id column="dept_id" jdbcType="INTEGER" property="deptId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="parent_id" jdbcType="INTEGER" property="parentId" />
     <result column="level" jdbcType="VARCHAR" property="level" />
@@ -13,6 +13,52 @@
     <result column="operator" jdbcType="VARCHAR" property="operator" />
     <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
   </resultMap>
+
+  <sql id="Base_Column_List">
+    dept_id, name, parent_id, level, seq, remark, create_time, operate_time, operator, 
+    operate_ip
+  </sql>
+
+  <select id="countByNameAndParentId" parameterType="map" resultType="java.lang.Integer">
+    select count(1)
+    from sys_dept
+    where name = #{name}
+    <if test="parentId != null">
+      and parent_id = #{parentId}
+    </if>
+    <if test="deptId != null">
+      and dept_id != #{deptId}
+    </if>
+  </select>
+
+  <select id="getAllDept" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_dept
+  </select>
+
+  <select id="getChildrenDeptByLevel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_dept
+    where level like concat(#{level,jdbcType=VARCHAR}, '.%')
+  </select>
+
+  <select id="selectLevelByPrimaryKey" parameterType="java.lang.Integer" resultType="java.lang.String">
+    select level from sys_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sys_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_dept
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </delete>
   <insert id="insert" parameterType="com.yaozhou.permission.model.SysDept">
     insert into sys_dept (dept_id, name, parent_id, 
       level, seq, remark, 
@@ -90,4 +136,87 @@
       </if>
     </trim>
   </insert>
+
+  <update id="batchUpdateByPrimaryKeySelective" parameterType="collection">
+    <foreach collection="depts" item="dept" separator=";">
+      update sys_dept
+      <set>
+        <if test="dept.name != null">
+          name = #{dept.name,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.parentId != null">
+          parent_id = #{dept.parentId,jdbcType=INTEGER},
+        </if>
+        <if test="dept.level != null">
+          level = #{dept.level,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.seq != null">
+          seq = #{dept.seq,jdbcType=INTEGER},
+        </if>
+        <if test="dept.remark != null">
+          remark = #{dept.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.createTime != null">
+          create_time = #{dept.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="dept.operateTime != null">
+          operate_time = #{dept.operateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="dept.operator != null">
+          operator = #{dept.operator,jdbcType=VARCHAR},
+        </if>
+        <if test="dept.operateIp != null">
+          operate_ip = #{dept.operateIp,jdbcType=VARCHAR},
+        </if>
+      </set>
+      where dept_id = #{dept.deptId,jdbcType=INTEGER}
+    </foreach>
+  </update>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.yaozhou.permission.model.SysDept">
+    update sys_dept
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="level != null">
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="seq != null">
+        seq = #{seq,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operateTime != null">
+        operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="operator != null">
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateIp != null">
+        operate_ip = #{operateIp,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.yaozhou.permission.model.SysDept">
+    update sys_dept
+    set name = #{name,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=INTEGER},
+      level = #{level,jdbcType=VARCHAR},
+      seq = #{seq,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      operate_time = #{operateTime,jdbcType=TIMESTAMP},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_ip = #{operateIp,jdbcType=VARCHAR}
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </update>
 </mapper>

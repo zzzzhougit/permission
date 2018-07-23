@@ -1,16 +1,20 @@
 package com.yaozhou.permission.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysRole implements Serializable {
+
+    private static final long serialVersionUID = 8211216611387272327L;
+
     private Integer roleId;
 
     private String name;
@@ -28,7 +32,5 @@ public class SysRole implements Serializable {
     private String operator;
 
     private String operateIp;
-
-    private static final long serialVersionUID = 1L;
 
 }

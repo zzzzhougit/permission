@@ -1,16 +1,20 @@
 package com.yaozhou.permission.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
 @Getter
 @Setter
+@Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class SysLog implements Serializable {
+
+    private static final long serialVersionUID = -6319010073922166987L;
+
     private Integer logId;
 
     private Short type;
@@ -26,7 +30,5 @@ public class SysLog implements Serializable {
     private String operateIp;
 
     private Short status;
-
-    private static final long serialVersionUID = 1L;
 
 }
