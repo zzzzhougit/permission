@@ -44,13 +44,15 @@ public class NeedLoginInterceptor implements HandlerInterceptor {
     }
 
     private static boolean needLoginPresent(Object handler) {
-        HandlerMethod handlerMethod = (HandlerMethod) handler;
+        if (handler instanceof HandlerMethod) {
+            HandlerMethod handlerMethod = (HandlerMethod) handler;
 
-        Method method = handlerMethod.getMethod();
-        Class<?> clazz = handlerMethod.getMethod().getDeclaringClass();
-        if (method.isAnnotationPresent(NeedLogin.class) || clazz.isAnnotationPresent(NeedLogin.class)) {
+            Method method = handlerMethod.getMethod();
+            Class<?> clazz = handlerMethod.getMethod().getDeclaringClass();
+            if (method.isAnnotationPresent(NeedLogin.class) || clazz.isAnnotationPresent(NeedLogin.class)) {
 
-            return true;
+                return true;
+            }
         }
 
         return false;
