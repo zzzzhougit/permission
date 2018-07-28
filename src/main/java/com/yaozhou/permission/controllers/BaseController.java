@@ -26,8 +26,6 @@ public class BaseController implements StatusCode {
     @Autowired
     protected ApplicationContext applicationContext;
 
-    private static final String CASHE_USER_KEY = "user";
-
     public <T> T popBean(Class<T> clazz) {
         if (null == applicationContext) {
 

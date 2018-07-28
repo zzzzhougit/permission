@@ -18,6 +18,6 @@ public class UserKeyPrefix extends BaseKeyPrefix {
         super(expireSeconds, prefix);
     }
 
-    public static final UserKeyPrefix CACHE_KEY_USERNAME_TO_USER = new UserKeyPrefix("un", EXPIRE_TIME_USERNAME_TO_USER);
+    public static final UserKeyPrefix CACHE_KEY_USERNAME_TO_USER = new UserKeyPrefix("uid", EXPIRE_TIME_USERNAME_TO_USER);
 
 }
