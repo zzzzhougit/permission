@@ -1,5 +1,6 @@
 package com.yaozhou.permission.controllers.admin;
 
+import com.yaozhou.permission.controllers.BaseController;
 import com.yaozhou.permission.filters.NeedLogin;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -16,10 +17,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 @NeedLogin
 @Controller
 @RequestMapping(path = "/admin")
-public class AdminController {
+public class AdminController extends BaseController {
 
     @RequestMapping(method = GET)
     public String index() {
+
         return "admin";
     }
 

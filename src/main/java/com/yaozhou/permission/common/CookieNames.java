@@ -21,7 +21,7 @@ public interface CookieNames {
         /**
          * 用户关联信息签证
          */
-        public static final String COOKIE_NAME_USER_INFO_VISA = "vs";
+        public static final String COOKIE_NAME_USER_INFO_VISA = "visa";
 
     }
 

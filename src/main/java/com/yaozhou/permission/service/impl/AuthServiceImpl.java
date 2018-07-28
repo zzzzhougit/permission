@@ -14,6 +14,7 @@ import com.yaozhou.permission.service.SysUserService;
 import com.yaozhou.permission.util.CookieUtil;
 import com.yaozhou.permission.util.EncryptUtil;
 import com.yaozhou.permission.util.PassWordUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import static com.yaozhou.permission.common.CookieNames.User.*;
  * @author Yao.Zhou
  * @since 2018/7/28 21:01
  */
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -35,46 +37,49 @@ public class AuthServiceImpl implements AuthService {
     private static final DESMessageEncrypt DES_COOKIE_USER_INFO = new DESMessageEncrypt("IS!)$Jf&*%");
 
     @Autowired
-    SysUserService sysUserService;
-    @Autowired
     private CacheService cacheService;
+    @Autowired
+    private SysUserService sysUserService;
 
     @Override
-    public SysUser keepAlive(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public boolean keepAlive(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (checkVisa(request) == false) {
+            clearLoginCookie(response);
 
-            return null;
+            return false;
         }
 
         JSONObject cookieInfo = decodeLoginCookie(request);
         if (null == cookieInfo) {
+            clearLoginCookie(response);
 
-            return null;
+            return false;
         }
 
         String userId = cookieInfo.getString("userId");
         if (null == userId) {
+            clearLoginCookie(response);
 
-            return null;
+            return false;
         }
 
         SysUser sysUser = (SysUser) cacheService.get(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId);
         if (null == sysUser) {
             clearLoginCookie(response);
 
-            return null;
+            return false;
         }
         if (sysUser.getStatus() != 1) {
             cacheService.remove(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId);
             clearLoginCookie(response);
 
-            return null;
+            return false;
         }
 
         //重置缓存
         cacheService.set(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId, sysUser);
 
-        return sysUser;
+        return true;
     }
 
     @Override
@@ -125,12 +130,18 @@ public class AuthServiceImpl implements AuthService {
         String userInfoFromCookie = CookieUtil.getCookieValue(COOKIE_NAME_USER_INFO, request);
         String visaFromCookie = CookieUtil.getCookieValue(COOKIE_NAME_USER_INFO_VISA, request);
         if (userInfoFromCookie == null || visaFromCookie == null) {
+            if (log.isDebugEnabled()) {
+                log.info("cookie 为空");
+            }
 
             return false;
         }
 
         String visa = EncryptUtil.md5(MD5_TIMES, userInfoFromCookie).toLowerCase();
         if (!visa.equals(visaFromCookie)) {
+            if (log.isDebugEnabled()) {
+                log.info("visa 校验失败");
+            }
 
             return false;
         }
@@ -150,7 +161,11 @@ public class AuthServiceImpl implements AuthService {
             return JSONObject.parseObject(
                         DES_COOKIE_USER_INFO.decode(userInfoFromCookie)
                     );
-        } catch (Exception e) { }
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.info("解析cookie失败");
+            }
+        }
 
         return null;
     }
@@ -167,8 +182,6 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 设置登录cookie
      *
-     * cookie时长为30天
-     *
      * @param sysUser
      * @param response
      * @throws Exception
@@ -183,10 +196,10 @@ public class AuthServiceImpl implements AuthService {
         jsonObject.put("userId", sysUser.getUserId());
 
         String infoValue = DES_COOKIE_USER_INFO.encode(jsonObject.toJSONString());
-        String visaValue = EncryptUtil.md5(MD5_TIMES, infoValue, sysUser.getSalt()).toLowerCase();
+        String visaValue = EncryptUtil.md5(MD5_TIMES, infoValue).toLowerCase();
 
-        CookieUtil.setCookie(response, infoKey, infoValue, "/", TimeUnit.DAY * 30);
-        CookieUtil.setCookie(response, visaKey, visaValue, "/", TimeUnit.DAY * 30);
+        CookieUtil.setCookie(response, infoKey, infoValue, "/", TimeUnit.DAY * 7);
+        CookieUtil.setCookie(response, visaKey, visaValue, "/", TimeUnit.DAY * 7);
     }
 
 }

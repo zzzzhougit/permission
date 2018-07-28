@@ -8,7 +8,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpSession;
 
 /**
- * 基于session的缓存, 超时时间统一是30分钟
+ * 基于session的缓存
  * @author Yao.Zhou
  * @since 2018/7/28 16:41
  * @see

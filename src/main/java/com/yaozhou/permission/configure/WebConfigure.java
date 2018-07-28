@@ -27,29 +27,28 @@ public class WebConfigure implements WebMvcConfigurer {
     }
 
     /**
-     * 参数解码
+     * 过滤器
      * @return
      */
     @Bean
-    public FilterRegistrationBean paramsDecodeFilter() {
+    public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean registrationBean = new FilterRegistrationBean();
 
-        registrationBean.setFilter(new ParamsDecodeFilter());
-        registrationBean.addUrlPatterns("/");
-        registrationBean.setName(ParamsDecodeFilter.class.getSimpleName());
         registrationBean.setOrder(1);
+        registrationBean.addUrlPatterns("/*");
+        registrationBean.setFilter(paramsDecodeFilter());
+        registrationBean.setName(ParamsDecodeFilter.class.getSimpleName());
 
         return registrationBean;
     }
 
-    /*@Bean
-    public EmbeddedServletContainerCustomizer containerCustomizer() {
-        return new EmbeddedServletContainerCustomizer() {
-            @Override
-            public void customize(ConfigurableEmbeddedServletContainer Container) {
-                container;
-            }
-        };
-    }*/
+    /**
+     * 参数解码过滤器
+     * @return
+     */
+    @Bean
+    public Filter paramsDecodeFilter() {
+        return new ParamsDecodeFilter();
+    }
 
 }

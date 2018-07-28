@@ -1,6 +1,5 @@
 package com.yaozhou.permission.service;
 
-import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.params.LoginUserParam;
 import com.yaozhou.permission.status.StatusCode;
 
@@ -21,7 +20,7 @@ public interface AuthService extends StatusCode {
      * @return
      * @throws Exception
      */
-    public SysUser keepAlive(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    public boolean keepAlive(HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     /**
      * 用户登录

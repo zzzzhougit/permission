@@ -12,8 +12,6 @@ import java.util.Map;
  */
 public class CookieUtil {
 
-    private static final ThreadLocal<Map<String, String>> cookiesHolder = new ThreadLocal<>();
-
     /**
      * 获取cookie的value
      * @param key
@@ -27,7 +25,7 @@ public class CookieUtil {
         if (null != key && key.trim().length() > 0) {
             key = key.trim();
 
-            cookiesMap = cookiesHolder.get();
+            cookiesMap = (Map<String, String>) request.getAttribute("cookiesMap");
             if (null == cookiesMap) {
                 cookiesMap = new HashMap<>();
 
@@ -42,7 +40,7 @@ public class CookieUtil {
                         }
                     }
 
-                    cookiesHolder.set(cookiesMap);
+                    request.setAttribute("cookiesMap", cookiesMap);
                 }
             }
 

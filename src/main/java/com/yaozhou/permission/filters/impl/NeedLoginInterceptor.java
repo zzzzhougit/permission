@@ -5,7 +5,14 @@ import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.service.AuthService;
 import com.yaozhou.permission.service.SysUserService;
 import com.yaozhou.permission.util.CookieUtil;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -21,10 +28,7 @@ import static com.yaozhou.permission.common.CookieNames.User.*;
  * @since 2018/7/18 0:15
  * @see com.yaozhou.permission.filters.NeedLogin
  */
-public class NeedLoginInterceptor implements HandlerInterceptor {
-
-    @Autowired
-    private AuthService authService;
+public class NeedLoginInterceptor implements HandlerInterceptor{
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -33,8 +37,9 @@ public class NeedLoginInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        SysUser sysUser = authService.keepAlive(request, response);
-        if (null == sysUser) {
+        BeanFactory factory = WebApplicationContextUtils.getRequiredWebApplicationContext(request.getServletContext());
+        AuthService authService = factory.getBean(AuthService.class);
+        if (authService.keepAlive(request, response) == false) {
             response.sendRedirect("/login");
 
             return false;
