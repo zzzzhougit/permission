@@ -1,4 +1,4 @@
-package com.yaozhou.permission.interceptors;
+package com.yaozhou.permission.filters;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

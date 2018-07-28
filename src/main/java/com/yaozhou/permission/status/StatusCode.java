@@ -28,4 +28,15 @@ public interface StatusCode {
     //资源不存在
     public static final int CODE_RESOURCE_NOT_EXIST = 4000002;
 
+    /**
+     * 用户异常
+     * code: 60000xx
+     */
+    //用户不存在
+    public static final int CODE_USER_NOT_EXIST = 6000001;
+    //用户密码错误
+    public static final int CODE_USER_PASSWORD_ERROR = 6000002;
+    //用户被冻结
+    public static final int CODE_USER_FROZEN = 6000003;
+
 }

@@ -20,6 +20,13 @@ public interface SysUserMapper {
     int updateByPrimaryKey(SysUser record);
 
     /**
+     * 根据用户名获得用户信息
+     * @param username
+     * @return
+     */
+    public SysUser selectByUserName(@Param("username") String username);
+
+    /**
      * 根据用户邮箱或者手机号码查找用户集
      * 如果用户userId不为空, 排除自己
      * @param sysUser

@@ -1,20 +1,32 @@
 package com.yaozhou.permission.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.yaozhou.permission.cache.CacheService;
+import com.yaozhou.permission.cache.KeyPrefix;
+import com.yaozhou.permission.cache.keyprefix.impl.UserKeyPrefix;
 import com.yaozhou.permission.common.exception.PermException;
+import com.yaozhou.permission.common.security.DESMessageEncrypt;
 import com.yaozhou.permission.mapper.SysUserMapper;
 import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.model.SysUser;
+import com.yaozhou.permission.params.LoginUserParam;
 import com.yaozhou.permission.params.UserParam;
 import com.yaozhou.permission.service.SysDeptService;
 import com.yaozhou.permission.service.SysUserService;
+import com.yaozhou.permission.util.CookieUtil;
+import com.yaozhou.permission.util.EncryptUtil;
 import com.yaozhou.permission.util.PassWordUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+
+
 
 /**
  * @author Yao.Zhou
@@ -24,9 +36,9 @@ import java.util.List;
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
-    SysDeptService sysDeptService;
-    @Autowired
     private SysUserMapper sysUserMapper;
+    @Autowired
+    private SysDeptService sysDeptService;
 
     @Override
     public void add(UserParam userParam) {
@@ -72,8 +84,8 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public SysUser selectByUsername(String username) {
-        return null;
+    public SysUser selectByUserName(String username) {
+        return sysUserMapper.selectByUserName(username);
     }
 
     //============================================

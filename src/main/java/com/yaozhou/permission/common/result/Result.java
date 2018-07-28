@@ -34,4 +34,8 @@ public class Result<T> {
         return new Result<T>(false, exceptionEntity.getMessage(), exceptionEntity.getCode(), null);
     }
 
+    public static <T> Result<T> error(int code, String message) {
+        return new Result<T>(false, message, code, null);
+    }
+
 }

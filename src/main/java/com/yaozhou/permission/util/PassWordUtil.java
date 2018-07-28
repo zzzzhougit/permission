@@ -45,12 +45,7 @@ public class PassWordUtil {
      * @return
      */
     public static String encodePassword(String password, String salt) {
-        String input = password + salt;
-        for (int i = 0; i < 50; i++) {
-            input = Hashing.md5().newHasher().putString(input, StandardCharsets.UTF_8).hash().toString();
-        }
-
-        return input;
+        return EncryptUtil.md5(50, password, salt).toLowerCase();
     }
 
     /**
@@ -98,8 +93,9 @@ public class PassWordUtil {
     }
 
     public static void main(String[] args) {
-        System.out.println(randomSalt());
-        System.out.println(randomPassword());
+        /*System.out.println(randomSalt());
+        System.out.println(randomPassword());*/
+        System.out.println(encodePassword("qwer00123456", "a17ce92b30"));
     }
 
 }

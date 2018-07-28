@@ -440,7 +440,7 @@ var prettyPrint;
         }
       }
   
-      // Remove any prefix anchors so that the output will match anywhere.
+      // Remove any keyprefix anchors so that the output will match anywhere.
       // ^^ really does mean an anchored match though.
       for (var i = 0; i < n; ++i) {
         if ('^' === parts[i] && '^' !== parts[i + 1]) { parts[i] = ''; }
@@ -642,7 +642,7 @@ var prettyPrint;
     * be called with '<\/script>' which would not match the original rule and
     * so the generic tag rule would identify it as a tag.
     *
-    * Pattern must only match prefixes, and if it matches a prefix, then that
+    * Pattern must only match prefixes, and if it matches a keyprefix, then that
     * match is considered a token with the same style.
     *
     * Context is applied to the last non-whitespace, non-comment token
@@ -1536,7 +1536,7 @@ var prettyPrint;
             // the language extension "cpp" is used to find a language handler
             // as passed to PR.registerLangHandler.
             // HTML5 recommends that a language be specified using "language-"
-            // as the prefix instead.  Google Code Prettify supports both.
+            // as the keyprefix instead.  Google Code Prettify supports both.
             // http://dev.w3.org/html5/spec-author-view/the-code-element.html
             var langExtension = attrs['lang'];
             if (!langExtension) {

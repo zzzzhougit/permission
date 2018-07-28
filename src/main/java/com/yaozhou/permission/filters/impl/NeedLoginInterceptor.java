@@ -1,46 +1,56 @@
-package com.yaozhou.permission.interceptors.impl;
+package com.yaozhou.permission.filters.impl;
 
-import com.yaozhou.permission.interceptors.NeedLogin;
+import com.yaozhou.permission.filters.NeedLogin;
+import com.yaozhou.permission.model.SysUser;
+import com.yaozhou.permission.service.AuthService;
+import com.yaozhou.permission.service.SysUserService;
+import com.yaozhou.permission.util.CookieUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.resource.HttpResource;
-import org.springframework.web.servlet.resource.ResourceHttpRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
 
+import static com.yaozhou.permission.common.CookieNames.User.*;
+
 /**
  * @author Yao.Zhou
  * @since 2018/7/18 0:15
- * @see com.yaozhou.permission.interceptors.NeedLogin
+ * @see com.yaozhou.permission.filters.NeedLogin
  */
 public class NeedLoginInterceptor implements HandlerInterceptor {
+
+    @Autowired
+    private AuthService authService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!needLoginPresent(handler)) {
+
             return true;
         }
 
-        //TODO
+        SysUser sysUser = authService.keepAlive(request, response);
+        if (null == sysUser) {
+            response.sendRedirect("/login");
+
+            return false;
+        }
 
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        if (!needLoginPresent(handler)) {
-            return ;
-        }
+
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-        if (!needLoginPresent(handler)) {
-            return ;
-        }
+
     }
 
     private static boolean needLoginPresent(Object handler) {

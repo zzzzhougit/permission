@@ -2,7 +2,7 @@ package com.yaozhou.permission.controllers.sys;
 
 import com.yaozhou.permission.common.result.Result;
 import com.yaozhou.permission.controllers.BaseController;
-import com.yaozhou.permission.interceptors.NeedLogin;
+import com.yaozhou.permission.filters.NeedLogin;
 import com.yaozhou.permission.params.UserParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

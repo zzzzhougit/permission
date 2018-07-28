@@ -1,10 +1,14 @@
 package com.yaozhou.permission.configure;
 
-import com.yaozhou.permission.interceptors.impl.NeedLoginInterceptor;
+import com.yaozhou.permission.filters.impl.NeedLoginInterceptor;
+import com.yaozhou.permission.filters.impl.ParamsDecodeFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import javax.servlet.Filter;
 
 /**
  * @author Yao.Zhou
@@ -19,18 +23,33 @@ public class WebConfigure implements WebMvcConfigurer {
      */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new NeedLoginInterceptor())
-                .addPathPatterns("/**")
-                .pathMatcher(staticPathMatcher());
+        registry.addInterceptor(new NeedLoginInterceptor()).addPathPatterns("/**");
     }
 
     /**
-     * 静态资源过滤
+     * 参数解码
      * @return
      */
     @Bean
-    StaticPathMatcher staticPathMatcher() {
-        return new StaticPathMatcher();
+    public FilterRegistrationBean paramsDecodeFilter() {
+        FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+
+        registrationBean.setFilter(new ParamsDecodeFilter());
+        registrationBean.addUrlPatterns("/");
+        registrationBean.setName(ParamsDecodeFilter.class.getSimpleName());
+        registrationBean.setOrder(1);
+
+        return registrationBean;
     }
+
+    /*@Bean
+    public EmbeddedServletContainerCustomizer containerCustomizer() {
+        return new EmbeddedServletContainerCustomizer() {
+            @Override
+            public void customize(ConfigurableEmbeddedServletContainer Container) {
+                container;
+            }
+        };
+    }*/
 
 }

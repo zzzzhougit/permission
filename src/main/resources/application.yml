@@ -2,6 +2,10 @@ server:
   port: 80
 
 spring:
+  mvc:
+    favicon:
+      enabled: false
+
   thymeleaf:
     prefix: classpath:/templates/
     suffix: .html

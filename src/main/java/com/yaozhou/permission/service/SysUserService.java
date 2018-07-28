@@ -23,10 +23,10 @@ public interface SysUserService extends StatusCode {
     public void update(UserParam userParam);
 
     /**
-     * 根据用户名查询唯一用户
+     * 根据用户名获得用户
      * @param username
      * @return
      */
-    public SysUser selectByUsername(String username);
+    public SysUser selectByUserName(String username);
 
 }
