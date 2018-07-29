@@ -117,12 +117,20 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @param after
      */
     private void updateWithChild(SysDept before, SysDept after) {
-        List<SysDept> sysDeptAfter = new LinkedList<>();
-        sysDeptAfter.add(after);
+        List<SysDept> update = new LinkedList<>();
+        update.add(after);
 
         //如果更新了level, 需要更新子部门的level
         if (!before.getLevel().equals(after.getLevel())) {
-            List<SysDept> childrenSysDept = sysDeptMapper.getChildrenDeptByLevel(before.getLevel());
+
+            String level = before.getLevel();
+            if (level.equals(LevelUtil.ROOT)) {
+                level = LevelUtil.calculateLevel(before.getLevel(), before.getDeptId());
+            } else {
+                level = before.getLevel() + LevelUtil.SEPARATOR;
+            }
+
+            List<SysDept> childrenSysDept = sysDeptMapper.getChildrenDeptByLevel(level);
             if (!CollectionUtils.isEmpty(childrenSysDept)) {
 
                 for (SysDept ch : childrenSysDept) {
@@ -137,13 +145,13 @@ public class SysDeptServiceImpl implements SysDeptService {
                             .operateTime(after.getOperateTime())
                             .build();
 
-                        sysDeptAfter.add(chAfter);
+                        update.add(chAfter);
                     } //end if
                 }
             }
         } //end outer if
 
-        sysDeptMapper.batchUpdateByPrimaryKeySelective(sysDeptAfter);
+        sysDeptMapper.batchUpdateByPrimaryKeySelective(update);
     }
 
 }
