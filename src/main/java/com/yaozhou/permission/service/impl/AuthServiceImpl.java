@@ -14,6 +14,7 @@ import com.yaozhou.permission.service.SysUserService;
 import com.yaozhou.permission.util.CookieUtil;
 import com.yaozhou.permission.util.EncryptUtil;
 import com.yaozhou.permission.util.PassWordUtil;
+import com.yaozhou.permission.util.StatusUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,21 +64,21 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        SysUser sysUser = (SysUser) cacheService.get(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId);
+        SysUser sysUser = (SysUser) cacheService.get(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId);
         if (null == sysUser) {
             clearLoginCookie(response);
 
             return false;
         }
-        if (sysUser.getStatus() != 1) {
-            cacheService.remove(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId);
+        if (!StatusUtil.sysUserStatusOk(sysUser)) {
+            cacheService.remove(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId);
             clearLoginCookie(response);
 
             return false;
         }
 
-        //重置缓存
-        cacheService.set(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId, sysUser);
+        //重置缓存 //TODO 刷新TTL
+        cacheService.set(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId, sysUser);
 
         return true;
     }
@@ -89,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
             throw new PermException(CODE_USER_NOT_EXIST, "用户不存在");
         }
 
-        if (sysUser.getStatus() != 1) {
+        if (!StatusUtil.sysUserStatusOk(sysUser)) {
             throw new PermException(CODE_USER_FROZEN, "用户已被冻结");
         }
 
@@ -101,7 +102,7 @@ public class AuthServiceImpl implements AuthService {
         //设置Cookie
         setLoginCookie(sysUser, response);
         //设置缓存
-        cacheService.set(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, sysUser.getUserId().toString(), sysUser);
+        cacheService.set(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, sysUser.getUserId().toString(), sysUser);
     }
 
     @Override
@@ -111,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
             if (null != cookieInfo) {
                 String userId = cookieInfo.getString("userId");
                 if (null != userId) {
-                    cacheService.remove(UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER, userId);
+                    cacheService.remove(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId);
                 }
             }
         }
@@ -187,7 +188,7 @@ public class AuthServiceImpl implements AuthService {
      * @throws Exception
      */
     private void setLoginCookie(SysUser sysUser, HttpServletResponse response) throws Exception {
-        KeyPrefix uck = UserKeyPrefix.CACHE_KEY_USERNAME_TO_USER;
+        KeyPrefix uck = UserKeyPrefix.CACHE_KEY_USERID_TO_USER;
 
         String infoKey = COOKIE_NAME_USER_INFO;
         String visaKey = COOKIE_NAME_USER_INFO_VISA;

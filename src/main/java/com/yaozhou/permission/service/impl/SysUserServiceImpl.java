@@ -7,15 +7,18 @@ import com.yaozhou.permission.cache.keyprefix.impl.UserKeyPrefix;
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.security.DESMessageEncrypt;
 import com.yaozhou.permission.mapper.SysUserMapper;
+import com.yaozhou.permission.model.PageResult;
 import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.params.LoginUserParam;
+import com.yaozhou.permission.params.PageParam;
 import com.yaozhou.permission.params.UserParam;
 import com.yaozhou.permission.service.SysDeptService;
 import com.yaozhou.permission.service.SysUserService;
 import com.yaozhou.permission.util.CookieUtil;
 import com.yaozhou.permission.util.EncryptUtil;
 import com.yaozhou.permission.util.PassWordUtil;
+import com.yaozhou.permission.util.StatusUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +38,8 @@ import java.util.List;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
+    @Autowired
+    private CacheService cacheService;
     @Autowired
     private SysUserMapper sysUserMapper;
     @Autowired
@@ -81,11 +86,34 @@ public class SysUserServiceImpl implements SysUserService {
                 .build();
 
         updateUser(after);
+
+        if (StatusUtil.sysUserStatusOk(after)) {
+            cacheService.setEx(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, after.getUserId().toString(), after);
+        } else {
+            cacheService.remove(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, after.getUserId().toString());
+        }
     }
 
     @Override
     public SysUser selectByUserName(String username) {
         return sysUserMapper.selectByUserName(username);
+    }
+
+    @Override
+    public PageResult<SysUser> getPageByDeptId(int deptId, PageParam pageParam) {
+        int count = sysUserMapper.countByDeptId(deptId);
+        if (count > 0) {
+            List<SysUser> sysUsers = sysUserMapper.getPageByDeptId(deptId, pageParam);
+
+            return PageResult.<SysUser>builder()
+                    .total(count)
+                    .data(sysUsers)
+                    .pageNo(pageParam.getPageNo())
+                    .pageSize(pageParam.getPageSize())
+                    .build();
+        }
+
+        return PageResult.<SysUser>builder().build();
     }
 
     //============================================

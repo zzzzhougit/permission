@@ -13,6 +13,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Yao.Zhou
@@ -50,10 +51,16 @@ public class SysDeptController extends BaseController {
         return Result.success(null);
     }
 
+    /**
+     * 删除部门
+     * @param deptId
+     * @return
+     */
     @ResponseBody
     @RequestMapping(path = "/delete", method = {GET, POST})
-    public Result<?> deleteDept(@Valid DeptParam deptParam) {
-        return null;
+    public Result<?> deleteDept(@RequestParam("deptId")Integer deptId) {
+
+        return Result.success(null);
     }
 
     /**

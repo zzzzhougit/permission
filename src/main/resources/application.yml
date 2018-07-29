@@ -56,13 +56,6 @@ mybatis:
     default-fetch-size: 100
     default-statement-timeout: 3000
 
-pagehelper:
-    helperDialect: mysql
-    reasonable: true
-    supportMethodsArguments: true
-    params: count=countSql
-    returnPageInfo: check
-
 #日志相关配置
 logging:
   path: K:\Git\permission\logs

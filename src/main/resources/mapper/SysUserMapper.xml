@@ -56,6 +56,22 @@
         </if>
   </select>
 
+  <select id="getPageByDeptId" parameterType="map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  sys_user
+    where dept_id = #{deptId,jdbcType=INTEGER}
+    order by username
+    limit #{page.offset}, #{page.pageSize}
+  </select>
+
+  <select id="countByDeptId" parameterType="int" resultType="int">
+    select
+    count(1)
+    from sys_user
+    where dept_id = #{deptId,jdbcType=INTEGER}
+  </select>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

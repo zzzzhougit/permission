@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindException;
+import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.thymeleaf.context.WebContext;
@@ -46,6 +48,10 @@ public class GlobalExceptionResolver  {
             if (log.isDebugEnabled()) {
                 log.error(permException.getExceptionEntity().getMessage(), exception);
             }
+
+        //Servlet的参数校验异常
+        } else if(exception instanceof MissingServletRequestParameterException || exception instanceof MissingPathVariableException) {
+            exceptionEntity = new CodeMessage(CodeMessage.CODE_ARGE_ERROR, exception.getMessage());
 
         //其他未定义异常统一是服务器异常
         } else {

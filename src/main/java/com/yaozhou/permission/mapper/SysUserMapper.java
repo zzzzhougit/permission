@@ -1,6 +1,7 @@
 package com.yaozhou.permission.mapper;
 
 import com.yaozhou.permission.model.SysUser;
+import com.yaozhou.permission.params.PageParam;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -18,6 +19,21 @@ public interface SysUserMapper {
     int updateByPrimaryKeySelective(SysUser record);
 
     int updateByPrimaryKey(SysUser record);
+
+    /**
+     * 根据deptId统计用户数量
+     * @param deptId
+     * @return
+     */
+    public int countByDeptId(@Param("deptId") int deptId);
+
+    /**
+     * 分页查询部门下用户
+     * @param deptId
+     * @param pageParam
+     * @return
+     */
+    public List<SysUser> getPageByDeptId(@Param("deptId") int deptId, @Param("page")PageParam pageParam);
 
     /**
      * 根据用户名获得用户信息

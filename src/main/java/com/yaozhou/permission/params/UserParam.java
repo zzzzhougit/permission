@@ -1,13 +1,10 @@
 package com.yaozhou.permission.params;
 
-import com.yaozhou.permission.common.validator.ShortSize;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 /**
  * @author Yao.Zhou
@@ -21,7 +18,7 @@ public class UserParam {
     private Integer userId;
 
     @NotBlank(message = "用户名不能为空")
-    @Size(min = 0, max = 20, message = "用户名长度在20个字以内")
+    @Size(max = 20, message = "用户名长度在20个字以内")
     private String username;
 
     @NotBlank(message = "电话号码不能为空")
@@ -36,10 +33,11 @@ public class UserParam {
     private Integer deptId;
 
     @NotNull(message = "用户状态不能为空")
-    @ShortSize(min = 0, max = 2, message = "用户状态不合法")
+    @Min(value = 0, message = "用户状态不合法")
+    @Max(value = 2, message = "用户状态不合法")
     private Short status;
 
-    @Size(min = 0, max = 200, message = "备注长度必须在200个字以内")
+    @Size(max = 200, message = "备注长度必须在200个字以内")
     private String remark;
 
 }

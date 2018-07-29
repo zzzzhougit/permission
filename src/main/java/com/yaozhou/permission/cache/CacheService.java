@@ -22,6 +22,14 @@ public interface CacheService<T> {
     public void set(KeyPrefix keyPrefix, String key, T value);
 
     /**
+     * 如果Key存在, 更新值
+     * @param keyPrefix
+     * @param key
+     * @param value
+     */
+    public void setEx(KeyPrefix keyPrefix, String key, T value);
+
+    /**
      * 移除一条缓存记录
      * @param keyPrefix
      */

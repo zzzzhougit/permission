@@ -14,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 public interface AuthService extends StatusCode {
 
     /**
-     * 校验用户登录, 校验成功后保持登录
+     * 校验用户登录
+     *
+     * 校验成功后, 刷新用户登录ttl, 保持登录
      * @param request
      * @param response
      * @return

@@ -119,10 +119,10 @@
                     <select id="deptSelectId" name="deptId" data-placeholder="选择部门" style="width: 200px;"></select>
                 </td>
             </tr>
+            <input type="hidden" name="userId" id="userId"/>
             <tr>
-                <td><label for="userName">名称</label></td>
-                <input type="hidden" name="id" id="userId"/>
-                <td><input type="text" name="username" id="userName" value="" class="text ui-widget-content ui-corner-all"></td>
+                <td><label for="userName">用户名</label></td>
+                <td><input type="text" name="username" id="username" value="" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
                 <td><label for="userMail">邮箱</label></td>
@@ -329,7 +329,7 @@
 
         function loadUserList(deptId) {
             var pageSize = $("#pageSize").val();
-            var url = "/sys/user/page.json?deptId=" + deptId;
+            var url = "/sys/user/listbydept?deptId=" + deptId;
             var pageNo = $("#userPage .pageNo").val() || 1;
             $.ajax({
                 url : url,
@@ -446,7 +446,8 @@
                         var targetUser = userMap[userId];
                         if (targetUser) {
                             $("#deptSelectId").val(targetUser.deptId);
-                            $("#userName").val(targetUser.username);
+                            $("#userId").val(targetUser.userId);
+                            $("#username").val(targetUser.username);
                             $("#userMail").val(targetUser.mail);
                             $("#userTelephone").val(targetUser.telephone);
                             $("#userStatus").val(targetUser.status);
