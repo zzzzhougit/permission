@@ -1,5 +1,6 @@
 package com.yaozhou.permission.util;
 
+import com.yaozhou.permission.model.SysDept;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -14,18 +15,19 @@ public class LevelUtil {
     /**
      * 构造部门的Level值
      * @param parentLevel
-     * @param parentId
+     * @param parentDeptId
      * @return
      */
-    public static String calculateLevel(String parentLevel, int parentId) {
-        if (StringUtils.isBlank(parentLevel) || parentId <= 0) {
+    public static String calculateLevel(String parentLevel, Integer parentDeptId) {
+        String level;
 
-            return ROOT;
+        if (null == parentLevel) {
+            level = ROOT;
         } else {
-
-            return StringUtils.join(parentLevel, SEPARATOR, parentId);
+            level = StringUtils.join(parentLevel, SEPARATOR, parentDeptId);
         }
 
+        return level;
     }
 
 }

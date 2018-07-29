@@ -26,12 +26,10 @@ public class SysDeptController extends BaseController {
 
     /**
      * 部门管理视图
-     * @param model
      * @return
      */
-    @RequestMapping(path = "view", method = {GET})
-    public Object view(Model model) {
-        //TODO
+    @RequestMapping(path = "dept.view", method = {GET})
+    public String view() {
 
         return "dept/dept.html";
     }
@@ -50,6 +48,12 @@ public class SysDeptController extends BaseController {
         sysDeptService.add(deptParam);
 
         return Result.success(null);
+    }
+
+    @ResponseBody
+    @RequestMapping(path = "/delete", method = {GET, POST})
+    public Result<?> deleteDept(@Valid DeptParam deptParam) {
+        return null;
     }
 
     /**

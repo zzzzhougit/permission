@@ -149,10 +149,10 @@ else {
 				//Pagination Buttons
 				$(nPaging).append(
 					'<ul class="pagination">'+
-						'<li class="prev disabled"><a href="#"><i class="fa fa-angle-double-left"></i></a></li>'+//first
-						'<li class="prev disabled"><a href="#"><i class="fa fa-angle-left"></i></a></li>'+//next
-						'<li class="next disabled"><a href="#"><i class="fa fa-angle-right"></i></a></li>'+//prev
-						'<li class="next disabled"><a href="#"><i class="fa fa-angle-double-right"></i></a></li>'+//last
+						'<li class="prev disabled"><a href="javascript:void(0);"><i class="fa fa-angle-double-left"></i></a></li>'+//first
+						'<li class="prev disabled"><a href="javascript:void(0);"><i class="fa fa-angle-left"></i></a></li>'+//next
+						'<li class="next disabled"><a href="javascript:void(0);"><i class="fa fa-angle-right"></i></a></li>'+//prev
+						'<li class="next disabled"><a href="javascript:void(0);"><i class="fa fa-angle-double-right"></i></a></li>'+//last
 					'</ul>'
 				);
 				var els = $('a', nPaging);
@@ -191,7 +191,7 @@ else {
 					// Add the new list items and their event handlers
 					for ( j=iStart ; j<=iEnd ; j++ ) {
 						sClass = (j==oPaging.iPage+1) ? 'class="active"' : '';
-						$('<li '+sClass+'><a href="#">'+j+'</a></li>')
+						$('<li '+sClass+'><a href="javascript:void(0);">'+j+'</a></li>')
 							.insertBefore( $('li.next:eq(0)', an[i])[0] )//ACE
 							.bind('click', function (e) {
 								e.preventDefault();

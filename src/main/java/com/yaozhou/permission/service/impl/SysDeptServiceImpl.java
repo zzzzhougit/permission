@@ -33,20 +33,24 @@ public class SysDeptServiceImpl implements SysDeptService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void update(DeptParam deptParam) throws Exception {
         SysDept before = sysDeptMapper.selectByPrimaryKey(deptParam.getDeptId());
+        if (null == before) {
+            throw new PermException(CODE_RESOURCE_NOT_EXIST, "更新的部门不存在");
+        }
 
         SysDept after = SysDept.builder()
-            .name(deptParam.getName())
-            .parentId(deptParam.getParentId())
             .seq(deptParam.getSeq())
-            .remark(deptParam.getRemark())
+            .level(before.getLevel())
+            .name(deptParam.getName())
             .deptId(before.getDeptId())
+            .remark(deptParam.getRemark())
+            .parentId(deptParam.getParentId())
 
             //TODO
             .operator("System")
             .operateIp("127.0.0.1")
             .operateTime(new Date())
             .build();
-        after.setLevel(calculateLevel(before, after));
+        after.setLevel(checkAndCalculateLevel(after));
 
         updateWithChild(before, after);
     }
@@ -64,11 +68,12 @@ public class SysDeptServiceImpl implements SysDeptService {
             .name(deptParam.getName())
             .remark(deptParam.getRemark())
             .parentId(deptParam.getParentId())
+
             //TODO
             .operator("System")
             .operateIp("127.0.0.1")
             .build();
-        sysDept.setLevel(calculateLevel(null, sysDept));
+        sysDept.setLevel(checkAndCalculateLevel(sysDept));
 
         sysDeptMapper.insertSelective(sysDept);
     }
@@ -77,54 +82,33 @@ public class SysDeptServiceImpl implements SysDeptService {
 
     /**
      * 计算Level值
-     * @param before 更新之前的Dept, 如果是新加, before = null
      * @param after  更新之后的Dept
      * @return
      */
-    private String calculateLevel(SysDept before, SysDept after) throws PermException {
-        String level = null;
-        Integer afterParentId = after.getParentId();
-
-        //查询上级部门
-        SysDept parentDept = null;
-        if (null != afterParentId && afterParentId > 0) {
-            parentDept = sysDeptMapper.selectByPrimaryKey(afterParentId);
-            if (null == parentDept) {
+    private String checkAndCalculateLevel(SysDept after) throws PermException {
+        //如果上级部门不为空, 检查上级部门
+        SysDept parent = null;
+        if (null != after.getParentId() && after.getParentId() > 0) {
+            parent = sysDeptMapper.selectByPrimaryKey(after.getParentId());
+            if (null == parent) {
 
                 throw new PermException(CODE_RESOURCE_NOT_EXIST, "上级部门不存在");
             } else {
 
-                if (sysDeptMapper.countByNameAndParentId(afterParentId, after.getName(), after.getDeptId()) > 0) {
+                if (sysDeptMapper.countByNameAndParentId(after.getParentId(), after.getName(), after.getDeptId()) > 0) {
 
                     throw new PermException(CODE_RESOURCE_CONFLICT, "同一层级下存在相同名称的部门");
+                } else if (after.getDeptId() != null && after.getDeptId().equals(parent.getDeptId())) {
+
+                    throw new PermException(CODE_RESOURCE_CONFLICT, "不能将自己修改到自己下面");
                 }
             }
         }
 
-        //新增dept
-        if (null == before) {
-            if (null != afterParentId && afterParentId > 0) {
-
-                level = LevelUtil.calculateLevel(parentDept.getLevel(), afterParentId);
-            } else {
-
-                level = LevelUtil.ROOT;
-            }
-
-        //更新
-        } else {
-            //after的parenntId为空或者和before一致, 表示不更新parent
-            if (null == afterParentId || afterParentId.equals(before.getParentId())) {
-                level =  before.getLevel();
-
-            //重新计算level
-            } else {
-                level = LevelUtil.calculateLevel(parentDept.getLevel(), afterParentId);
-            }
-
-        }
-
-        return level;
+        return null == parent ?
+                    LevelUtil.calculateLevel(null, null)
+                :
+                    LevelUtil.calculateLevel(parent.getLevel(), parent.getDeptId());
     }
 
     /**
@@ -134,6 +118,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      */
     private void updateWithChild(SysDept before, SysDept after) {
         List<SysDept> sysDeptAfter = new LinkedList<>();
+        sysDeptAfter.add(after);
 
         //如果更新了level, 需要更新子部门的level
         if (!before.getLevel().equals(after.getLevel())) {
@@ -158,9 +143,6 @@ public class SysDeptServiceImpl implements SysDeptService {
             }
         } //end outer if
 
-        if (sysDeptAfter.size() > 0) {
-            sysDeptAfter.add(after);
-        }
         sysDeptMapper.batchUpdateByPrimaryKeySelective(sysDeptAfter);
     }
 
