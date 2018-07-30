@@ -30,18 +30,31 @@ public interface CacheService<T> {
 
     /**
      * 如果Key存在, 更新值
+     *
      * @param keyPrefix
      * @param key
      * @param value
+     * @return 如果更新成功返回true
      */
-    public void setEx(KeyPrefix keyPrefix, String key, T value);
+    public boolean setEx(KeyPrefix keyPrefix, String key, T value);
 
     /**
      * 如果key不存在, 设置值
+     *
      * @param keyPrefix
      * @param key
      * @param value
+     * @return 如果key不存在, 返回null并更新K-V; 如果key存在, 返回key的值
      */
-    public void setNx(KeyPrefix keyPrefix, String key, T value);
+    public T setNx(KeyPrefix keyPrefix, String key, T value);
+
+    /**
+     * 判断key是否存在
+     *
+     * @param keyPrefix
+     * @param key
+     * @return
+     */
+    public boolean exist(KeyPrefix keyPrefix, String key);
 
 }

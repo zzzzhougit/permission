@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 单机版的内存缓存
+ *
  * @author Yao.Zhou
  * @since 2018/7/28 16:41
  * @see
@@ -15,7 +16,40 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class MemoryCacheService<T> extends AbstractCacheService<T> {
 
-    private static final Map<String, Object> cache = new ConcurrentHashMap<>();
+    private static final Map<String, ValueWithTtl> cache = new ConcurrentHashMap<>();
+
+    /**
+     * cache 的实际存储值
+     *
+     * @param <T>
+     */
+    private static class ValueWithTtl<T> {
+        private T value;
+        private long expiredTime;
+
+        public ValueWithTtl(T value, int ttl) {
+            this.value = value;
+            this.expiredTime = System.currentTimeMillis() + ttl * 1000;
+        }
+
+        public T val() {
+            return this.value;
+        }
+
+        public boolean expired() {
+            if (this.expiredTime > 0 && System.currentTimeMillis() > this.expiredTime) {
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    @Override
+    public boolean exist(KeyPrefix keyPrefix, String key) {
+        return cache.containsKey(keyPrefix.getFullKey(key));
+    }
 
     @Override
     public T get(KeyPrefix keyPrefix, String key) {
@@ -24,7 +58,8 @@ public class MemoryCacheService<T> extends AbstractCacheService<T> {
 
     @Override
     public void set(KeyPrefix keyPrefix, String key, T value) {
-        cache.put(keyPrefix.getFullKey(key), value);
+        ValueWithTtl<T> valueWithTtl = new ValueWithTtl<>(value, keyPrefix.expireSeconds());
+        cache.put(keyPrefix.getFullKey(key), valueWithTtl);
     }
 
     /**
@@ -33,16 +68,23 @@ public class MemoryCacheService<T> extends AbstractCacheService<T> {
      * @param key
      * @param value
      */
+    @Deprecated
     @Override
-    public void setEx(KeyPrefix keyPrefix, String key, T value) {
+    public boolean setEx(KeyPrefix keyPrefix, String key, T value) {
         if (null != cache.get(keyPrefix.getFullKey(key))) {
-            cache.put(keyPrefix.getFullKey(key), value);
+            ValueWithTtl<T> valueWithTtl = new ValueWithTtl<>(value, keyPrefix.expireSeconds());
+            cache.put(keyPrefix.getFullKey(key), valueWithTtl);
+
+            return true;
+        } else {
+            return false;
         }
     }
 
     @Override
-    public void setNx(KeyPrefix keyPrefix, String key, T value) {
-        cache.putIfAbsent(keyPrefix.getFullKey(key), value);
+    public T setNx(KeyPrefix keyPrefix, String key, T value) {
+        ValueWithTtl<T> valueWithTtl = new ValueWithTtl<>(value, keyPrefix.expireSeconds());
+        return (T) cache.putIfAbsent(keyPrefix.getFullKey(key), valueWithTtl);
     }
 
     @Override

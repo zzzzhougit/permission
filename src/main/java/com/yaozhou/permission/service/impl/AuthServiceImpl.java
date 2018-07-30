@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.yaozhou.permission.cache.CacheService;
 import com.yaozhou.permission.cache.KeyPrefix;
 import com.yaozhou.permission.cache.keyprefix.impl.UserKeyPrefix;
+import com.yaozhou.permission.cache.keyprefix.impl.UserTtlKeyPrefix;
 import com.yaozhou.permission.common.TimeUnit;
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.security.DESMessageEncrypt;
@@ -65,21 +66,13 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        SysUser sysUser = (SysUser) cacheService.get(UserKeyPrefix.KEY_PREFIX_USERID, userId);
-        if (null == sysUser) {
+        //刷新ttl
+        boolean refreshed = cacheService.setEx(UserTtlKeyPrefix.KEY_PREFIX_USER_TTL, userId, System.currentTimeMillis());
+        if (!refreshed) {
             clearLoginCookie(response);
 
             return false;
         }
-        if (!StatusUtil.sysUserStatusOk(sysUser)) {
-            cacheService.remove(UserKeyPrefix.KEY_PREFIX_USERID, userId);
-            clearLoginCookie(response);
-
-            return false;
-        }
-
-        //重置缓存 //TODO 刷新TTL
-        cacheService.set(UserKeyPrefix.KEY_PREFIX_USERID, userId, sysUser);
 
         return true;
     }
@@ -104,6 +97,7 @@ public class AuthServiceImpl implements AuthService {
         setLoginCookie(sysUser, response);
         //设置缓存
         cacheService.set(UserKeyPrefix.KEY_PREFIX_USERID, sysUser.getUserId().toString(), sysUser);
+        cacheService.set(UserTtlKeyPrefix.KEY_PREFIX_USER_TTL, sysUser.getUserId().toString(), System.currentTimeMillis());
     }
 
     @Override
@@ -114,6 +108,7 @@ public class AuthServiceImpl implements AuthService {
                 String userId = cookieInfo.getString("userId");
                 if (null != userId) {
                     cacheService.remove(UserKeyPrefix.KEY_PREFIX_USERID, userId);
+                    cacheService.remove(UserTtlKeyPrefix.KEY_PREFIX_USER_TTL, userId);
                 }
             }
         }

@@ -2,6 +2,7 @@ package com.yaozhou.permission.service.impl;
 
 import com.yaozhou.permission.cache.CacheService;
 import com.yaozhou.permission.cache.keyprefix.impl.UserKeyPrefix;
+import com.yaozhou.permission.cache.keyprefix.impl.UserTtlKeyPrefix;
 import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.mapper.SysUserMapper;
 import com.yaozhou.permission.model.PageResult;
@@ -77,12 +78,6 @@ public class SysUserServiceImpl implements SysUserService {
                 .build();
 
         updateUser(after);
-
-        if (StatusUtil.sysUserStatusOk(after)) {
-            cacheService.setEx(UserKeyPrefix.KEY_PREFIX_USERID, after.getUserId().toString(), after);
-        } else {
-            cacheService.remove(UserKeyPrefix.KEY_PREFIX_USERID, after.getUserId().toString());
-        }
     }
 
     @Override
@@ -136,6 +131,14 @@ public class SysUserServiceImpl implements SysUserService {
         checkDept(after);
         checkDuplicateProperties(after);
         sysUserMapper.updateByPrimaryKeySelective(after);
+
+        if (StatusUtil.sysUserStatusOk(after)) {
+            //如果如果用户在缓存中存在, 更新缓存数据
+            cacheService.setEx(UserKeyPrefix.KEY_PREFIX_USERID, after.getUserId().toString(), after);
+        } else {
+            //如果用户状态异常, 移除用户ttl
+            cacheService.remove(UserTtlKeyPrefix.KEY_PREFIX_USER_TTL, after.getUserId().toString());
+        }
     }
 
     /**
