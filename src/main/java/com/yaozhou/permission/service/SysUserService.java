@@ -13,6 +13,13 @@ import com.yaozhou.permission.status.StatusCode;
 public interface SysUserService extends StatusCode {
 
     /**
+     * 根据用户id获取用户
+     * @param userId
+     * @return
+     */
+    public SysUser cachedSelectByPrimaryKey(int userId);
+
+    /**
      * 添加用户
      * @param userParam
      */

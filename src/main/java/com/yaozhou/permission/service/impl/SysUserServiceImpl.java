@@ -38,6 +38,16 @@ public class SysUserServiceImpl implements SysUserService {
     private SysDeptService sysDeptService;
 
     @Override
+    public SysUser cachedSelectByPrimaryKey(int userId) {
+        Object cacheValue = cacheService.get(UserKeyPrefix.KEY_PREFIX_USERID, String.valueOf(userId));
+        if (null == cacheValue) {
+            cacheValue = sysUserMapper.selectByPrimaryKey(userId);
+        }
+
+        return (SysUser) cacheValue;
+    }
+
+    @Override
     public void add(UserParam userParam) {
         SysUser sysUser =
                 SysUser.builder()
