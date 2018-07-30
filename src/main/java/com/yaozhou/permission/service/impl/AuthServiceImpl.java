@@ -23,7 +23,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.yaozhou.permission.common.CookieNames.User.*;
+import static com.yaozhou.permission.common.CookieNames.User.COOKIE_NAME_USER_INFO;
+import static com.yaozhou.permission.common.CookieNames.User.COOKIE_NAME_USER_INFO_VISA;
 
 /**
  * @author Yao.Zhou
@@ -64,21 +65,21 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        SysUser sysUser = (SysUser) cacheService.get(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId);
+        SysUser sysUser = (SysUser) cacheService.get(UserKeyPrefix.KEY_PREFIX_USERID, userId);
         if (null == sysUser) {
             clearLoginCookie(response);
 
             return false;
         }
         if (!StatusUtil.sysUserStatusOk(sysUser)) {
-            cacheService.remove(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId);
+            cacheService.remove(UserKeyPrefix.KEY_PREFIX_USERID, userId);
             clearLoginCookie(response);
 
             return false;
         }
 
         //重置缓存 //TODO 刷新TTL
-        cacheService.set(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId, sysUser);
+        cacheService.set(UserKeyPrefix.KEY_PREFIX_USERID, userId, sysUser);
 
         return true;
     }
@@ -102,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
         //设置Cookie
         setLoginCookie(sysUser, response);
         //设置缓存
-        cacheService.set(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, sysUser.getUserId().toString(), sysUser);
+        cacheService.set(UserKeyPrefix.KEY_PREFIX_USERID, sysUser.getUserId().toString(), sysUser);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class AuthServiceImpl implements AuthService {
             if (null != cookieInfo) {
                 String userId = cookieInfo.getString("userId");
                 if (null != userId) {
-                    cacheService.remove(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, userId);
+                    cacheService.remove(UserKeyPrefix.KEY_PREFIX_USERID, userId);
                 }
             }
         }
@@ -188,7 +189,7 @@ public class AuthServiceImpl implements AuthService {
      * @throws Exception
      */
     private void setLoginCookie(SysUser sysUser, HttpServletResponse response) throws Exception {
-        KeyPrefix uck = UserKeyPrefix.CACHE_KEY_USERID_TO_USER;
+        KeyPrefix uck = UserKeyPrefix.KEY_PREFIX_USERID;
 
         String infoKey = COOKIE_NAME_USER_INFO;
         String visaKey = COOKIE_NAME_USER_INFO_VISA;

@@ -41,6 +41,11 @@ public class MemoryCacheService<T> extends AbstractCacheService<T> {
     }
 
     @Override
+    public void setNx(KeyPrefix keyPrefix, String key, T value) {
+        cache.putIfAbsent(keyPrefix.getFullKey(key), value);
+    }
+
+    @Override
     public void remove(KeyPrefix keyPrefix, String key) {
         cache.remove(keyPrefix.getFullKey(key));
     }

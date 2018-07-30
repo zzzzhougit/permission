@@ -8,7 +8,7 @@ import com.yaozhou.permission.cache.keyprefix.BaseKeyPrefix;
  */
 public class UserKeyPrefix extends BaseKeyPrefix {
 
-    private static final int EXPIRE_TIME_USERID_TO_USER = MINUTE * 30;
+    private static final int EXPIRE_TIME_USERID = MINUTE * 30;
 
     public UserKeyPrefix(String prefix) {
         super(prefix);
@@ -18,6 +18,6 @@ public class UserKeyPrefix extends BaseKeyPrefix {
         super(expireSeconds, prefix);
     }
 
-    public static final UserKeyPrefix CACHE_KEY_USERID_TO_USER = new UserKeyPrefix("uid", EXPIRE_TIME_USERID_TO_USER);
+    public static final UserKeyPrefix KEY_PREFIX_USERID = new UserKeyPrefix("uid", EXPIRE_TIME_USERID);
 
 }

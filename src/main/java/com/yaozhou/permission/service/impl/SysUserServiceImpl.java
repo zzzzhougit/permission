@@ -1,34 +1,25 @@
 package com.yaozhou.permission.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.yaozhou.permission.cache.CacheService;
-import com.yaozhou.permission.cache.KeyPrefix;
 import com.yaozhou.permission.cache.keyprefix.impl.UserKeyPrefix;
 import com.yaozhou.permission.common.exception.PermException;
-import com.yaozhou.permission.common.security.DESMessageEncrypt;
 import com.yaozhou.permission.mapper.SysUserMapper;
 import com.yaozhou.permission.model.PageResult;
 import com.yaozhou.permission.model.SysDept;
 import com.yaozhou.permission.model.SysUser;
-import com.yaozhou.permission.params.LoginUserParam;
 import com.yaozhou.permission.params.PageParam;
 import com.yaozhou.permission.params.UserParam;
 import com.yaozhou.permission.service.SysDeptService;
 import com.yaozhou.permission.service.SysUserService;
-import com.yaozhou.permission.util.CookieUtil;
-import com.yaozhou.permission.util.EncryptUtil;
 import com.yaozhou.permission.util.PassWordUtil;
 import com.yaozhou.permission.util.StatusUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
-
 
 
 /**
@@ -49,16 +40,16 @@ public class SysUserServiceImpl implements SysUserService {
     public void add(UserParam userParam) {
         SysUser sysUser =
                 SysUser.builder()
-                .mail(userParam.getMail())
-                .deptId(userParam.getDeptId())
-                .remark(userParam.getRemark())
-                .salt(PassWordUtil.randomSalt())
-                .username(userParam.getUsername())
-                .telephone(userParam.getTelephone())
-                //TODO
-                .operator("System")
-                .operateIp("127.0.0.1")
-                .build();
+                        .mail(userParam.getMail())
+                        .deptId(userParam.getDeptId())
+                        .remark(userParam.getRemark())
+                        .salt(PassWordUtil.randomSalt())
+                        .username(userParam.getUsername())
+                        .telephone(userParam.getTelephone())
+                        //TODO
+                        .operator("System")
+                        .operateIp("127.0.0.1")
+                        .build();
 
         //设置密码
         String password = PassWordUtil.randomPassword();
@@ -88,9 +79,9 @@ public class SysUserServiceImpl implements SysUserService {
         updateUser(after);
 
         if (StatusUtil.sysUserStatusOk(after)) {
-            cacheService.setEx(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, after.getUserId().toString(), after);
+            cacheService.setEx(UserKeyPrefix.KEY_PREFIX_USERID, after.getUserId().toString(), after);
         } else {
-            cacheService.remove(UserKeyPrefix.CACHE_KEY_USERID_TO_USER, after.getUserId().toString());
+            cacheService.remove(UserKeyPrefix.KEY_PREFIX_USERID, after.getUserId().toString());
         }
     }
 
@@ -120,6 +111,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 在一个事务中添加用户
+     *
      * @param sysUser
      */
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -131,6 +123,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 在一个事务中更新用户
+     *
      * @param after
      */
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -147,6 +140,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 检查用户部门
+     *
      * @param after
      */
     private void checkDept(SysUser after) throws PermException {
@@ -160,7 +154,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     /**
      * 新增,修改之前: 检查用户属性是否合理 (telephone, mail) </br></br>
-     *
+     * <p>
      * 对于更新的用户, userId始终为空 </br>
      * 对于添加的用户, userId始终不为空 </br>
      * 如果userId不为空, 验证用户唯一属性约束时排除本身属性
@@ -177,7 +171,7 @@ public class SysUserServiceImpl implements SysUserService {
                 } else if (sysUser.getMail().equals(after.getMail())) {
 
                     throw new PermException(CODE_RESOURCE_CONFLICT, "邮箱已被使用");
-                } else if(sysUser.getUsername().equals(after.getUsername())) {
+                } else if (sysUser.getUsername().equals(after.getUsername())) {
 
                     throw new PermException(CODE_RESOURCE_CONFLICT, "用户名已被使用");
                 }
