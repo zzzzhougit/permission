@@ -2,13 +2,12 @@ package com.yaozhou.permission.cache.service;
 
 import com.yaozhou.permission.cache.CacheService;
 import com.yaozhou.permission.cache.KeyPrefix;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import sun.misc.Unsafe;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -18,37 +17,53 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2018/7/28 16:41
  * @see
  */
+@Slf4j
 @Service
 public class MemoryCacheService<T> implements CacheService<T> {
 
     @Override
     public boolean exist(KeyPrefix keyPrefix, String key) {
-        return null == getCacheValue(keyPrefix.getFullKey(key)) ? false : true;
+        return null == cache.get(keyPrefix.getFullKey(key)) ? false : true;
     }
 
     @Override
     public T get(KeyPrefix keyPrefix, String key) {
-        return getCacheValue(keyPrefix.getFullKey(key));
+        long time = System.currentTimeMillis();
+
+        T value = null;
+        ValueWithTtl valueWithTtl = cache.get(keyPrefix.getFullKey(key));
+        if (valueWithTtl.expired(time)) {
+            cache.remove(keyPrefix.getFullKey(key));
+        } else {
+            value = (T) valueWithTtl.value();
+        }
+
+        return value;
     }
 
     @Override
     public void set(KeyPrefix keyPrefix, String key, T value) {
-        setIntoCache(keyPrefix.getFullKey(key), value, keyPrefix.expireSeconds());
+        cache.put(keyPrefix.getFullKey(key), new ValueWithTtl<>(value, keyPrefix.expireSeconds()));
     }
 
     @Override
     public boolean setEx(KeyPrefix keyPrefix, String key, T value) {
-        return setIntoCacheIfExist(keyPrefix.getFullKey(key), value, keyPrefix.expireSeconds());
+        ValueWithTtl<T> cachedValue = cache.replace(keyPrefix.getFullKey(key), new ValueWithTtl<>(value, keyPrefix.expireSeconds()));
+
+        return null == cachedValue ? false : true;
+
     }
 
     @Override
     public T setNx(KeyPrefix keyPrefix, String key, T value) {
-        return setIntoCacheIfNotExist(keyPrefix.getFullKey(key), value, keyPrefix.expireSeconds());
+        ValueWithTtl<T> result = cache.putIfAbsent(keyPrefix.getFullKey(key), new ValueWithTtl<>(value, keyPrefix.expireSeconds()));
+
+        return null == result ? null : result.value();
     }
 
     @Override
     public void remove(KeyPrefix keyPrefix, String key) {
-        removeCacheValue(keyPrefix.getFullKey(key));
+        cache.remove(keyPrefix.getFullKey(key));
     }
 
     //==============================================================================
@@ -56,122 +71,23 @@ public class MemoryCacheService<T> implements CacheService<T> {
     /**
      * 缓存Map
      */
-    private final Map<String, ValueWithTtl<T>> cache = new HashMap<>();
-    private final Map<String, Object> keysMonitor = new ConcurrentHashMap<>();
-    private static final Unsafe UNSAFE = Unsafe.getUnsafe();
+    private final Timer timmer = new Timer();
+    private final Map<String, ValueWithTtl<T>> cache = new ConcurrentHashMap<>();
 
-    /**
-     * 添加值
-     * @param key
-     * @param value
-     * @param expireSeconds
-     */
-    private void setIntoCache(String key, T value, int expireSeconds) {
-        ValueWithTtl<T> valueWithTtl = new ValueWithTtl<>(value, expireSeconds);
-
-        Object monitor = keysMonitor.get(key);
-        if (null != monitor) {
-            synchronized (monitor) {
-                cache.put(key, valueWithTtl);
-            }
-        } else {
-            //keysMonitor.put()
-        }
-
-        //Object monitor = new Object();
-        keysMonitor.put(key, monitor);
-        synchronized (monitor) {
-            cache.put(key, valueWithTtl);
-        }
-    }
-
-    /**
-     * 移除缓存的K-V
-     * @param key
-     */
-    private void removeCacheValue(String key) {
-        Object monitor = keysMonitor.remove(key);
-        if (null != monitor) {
-            try {
-                synchronized (monitor) {
-                    cache.remove(key);
-                }
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-    }
-
-    /**
-     * 根据key获得Value
-     * @param key
-     * @return
-     */
-    private T getCacheValue(String key) {
-        long time = System.currentTimeMillis();
-
-        T value = null;
-        Object monitor = keysMonitor.get(key);
-        if (null != monitor) {
-            try {
-                synchronized (monitor) {
-                    ValueWithTtl valueWithTtl = cache.get(key);
-                    if (valueWithTtl.expired(time)) {
+    public MemoryCacheService() {
+        /*timmer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                cache.keySet().forEach(key -> {
+                    ValueWithTtl<T> valueWithTtl = cache.get(key);
+                    if (valueWithTtl.expired(System.currentTimeMillis())) {
                         cache.remove(key);
-                        keysMonitor.remove(key);
-                    } else {
-                        value = (T) valueWithTtl.value();
+
+                        log.info("key{}, value{} is expored", key, valueWithTtl.value());
                     }
-                }
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-
-        return value;
-    }
-
-    /**
-     * 如果缓存不存在K, 更新返回value, 否则返回cacheValue
-     * @param key
-     * @param value
-     * @param expireSeconds
-     * @return
-     */
-    public T setIntoCacheIfNotExist(String key, T value, int expireSeconds) {
-        T resultValue = value;
-
-        Object monitor = keysMonitor.get(key);
-        if (null != monitor) {
-            try {
-                synchronized (monitor) {
-                    resultValue = getCacheValue(key);
-                }
-            } catch (Exception e) { e.printStackTrace(); }
-        } else {
-            setIntoCache(key, value, expireSeconds);
-        }
-
-        return resultValue;
-    }
-
-    /**
-     * 如果缓存存在K, 更新返回true, 否则返回false
-     * @param key
-     * @param value
-     * @param expireSeconds
-     * @return
-     */
-    private boolean setIntoCacheIfExist(String key, T value, int expireSeconds) {
-        boolean exist = false;
-
-        Object monitor = keysMonitor.get(key);
-        if (null != monitor) {
-            try {
-                synchronized (monitor) {
-                    setIntoCache(key, value, expireSeconds);
-                    exist = true;
-                }
-            } catch (Exception e) { e.printStackTrace(); }
-        }
-
-        return exist;
+                });
+            }
+        }, 0, 1000);*/
     }
 
     /**

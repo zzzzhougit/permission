@@ -44,7 +44,7 @@ public interface CacheService<T> {
      * @param keyPrefix
      * @param key
      * @param value
-     * @return 如果key不存在, 返回null并更新K-V; 如果key存在, 返回key的值
+     * @return 如果key不存在, 返回null并更新K-V; 如果key存在, 返回key旧的值
      */
     public T setNx(KeyPrefix keyPrefix, String key, T value);
 
