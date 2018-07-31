@@ -39,8 +39,9 @@ public class SysUserServiceImpl implements SysUserService {
     private SysDeptService sysDeptService;
 
     @Override
-    public SysUser cachedSelectByPrimaryKey(int userId) {
-        Object cacheValue = cacheService.get(UserKeyPrefix.KEY_PREFIX_USERID, String.valueOf(userId));
+    public SysUser cachedSelectByPrimaryKey(int userId) throws Exception  {
+        Object cacheValue = null;
+        cacheValue = cacheService.get(UserKeyPrefix.KEY_PREFIX_USERID, String.valueOf(userId));
         if (null == cacheValue) {
             cacheValue = sysUserMapper.selectByPrimaryKey(userId);
         }
@@ -71,7 +72,7 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public void update(UserParam userParam, SysUser operator, String ipaddr) {
+    public void update(UserParam userParam, SysUser operator, String ipaddr) throws Exception  {
         SysUser after = SysUser.builder()
                     .operateIp(ipaddr)
                     .operateTime(new Date())
@@ -135,7 +136,7 @@ public class SysUserServiceImpl implements SysUserService {
      * @param after
      */
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    private void updateUser(SysUser after) {
+    private void updateUser(SysUser after) throws Exception {
         SysUser before = sysUserMapper.selectByPrimaryKey(after.getUserId());
         if (null == before) {
             throw new PermException(CODE_RESOURCE_NOT_EXIST, "用户不存在");

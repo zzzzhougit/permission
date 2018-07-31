@@ -12,21 +12,21 @@ public interface CacheService<T> {
      * @param keyPrefix
      * @return
      */
-    public T get(KeyPrefix keyPrefix, String key);
+    public T get(KeyPrefix keyPrefix, String key) throws Exception;
 
     /**
      * 设置一条缓存记录
      * @param keyPrefix
      * @param value
      */
-    public void set(KeyPrefix keyPrefix, String key, T value);
+    public void set(KeyPrefix keyPrefix, String key, T value) throws Exception;
 
     /**
      * 移除一条缓存记录
      *
      * @param keyPrefix
      */
-    public void remove(KeyPrefix keyPrefix, String key);
+    public void remove(KeyPrefix keyPrefix, String key) throws Exception;
 
     /**
      * 如果Key存在, 更新值
@@ -36,7 +36,7 @@ public interface CacheService<T> {
      * @param value
      * @return 如果更新成功返回true
      */
-    public boolean setEx(KeyPrefix keyPrefix, String key, T value);
+    public boolean setEx(KeyPrefix keyPrefix, String key, T value) throws Exception;
 
     /**
      * 如果key不存在, 设置值
@@ -46,7 +46,7 @@ public interface CacheService<T> {
      * @param value
      * @return 如果key不存在, 返回null并更新K-V; 如果key存在, 返回key旧的值
      */
-    public T setNx(KeyPrefix keyPrefix, String key, T value);
+    public T setNx(KeyPrefix keyPrefix, String key, T value) throws Exception;
 
     /**
      * 判断key是否存在
@@ -55,6 +55,6 @@ public interface CacheService<T> {
      * @param key
      * @return
      */
-    public boolean exist(KeyPrefix keyPrefix, String key);
+    public boolean exist(KeyPrefix keyPrefix, String key) throws Exception;
 
 }

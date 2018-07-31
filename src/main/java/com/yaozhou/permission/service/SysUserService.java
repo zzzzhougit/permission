@@ -17,7 +17,7 @@ public interface SysUserService extends StatusCode {
      * @param userId
      * @return
      */
-    public SysUser cachedSelectByPrimaryKey(int userId);
+    public SysUser cachedSelectByPrimaryKey(int userId) throws Exception;
 
     /**
      * 添加用户
@@ -38,7 +38,7 @@ public interface SysUserService extends StatusCode {
      * @param operator
      * @param ipaddr
      */
-    public void update(UserParam userParam, SysUser operator, String ipaddr);
+    public void update(UserParam userParam, SysUser operator, String ipaddr) throws Exception;
 
     /**
      * 根据用户名获得用户
