@@ -67,7 +67,7 @@ public class SysUserController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(path = "/update", method = {GET, POST})
-    public Result<?> update(HttpServletRequest request, @Valid UserParam userParam) {
+    public Result<?> update(HttpServletRequest request, @Valid UserParam userParam) throws Exception {
         sysUserService.update(userParam, authService.getCurrentUser(request), IpUtil.getRemoteIp(request));
 
         return Result.success(null);
