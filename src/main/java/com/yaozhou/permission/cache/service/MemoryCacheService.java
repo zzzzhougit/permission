@@ -24,7 +24,7 @@ public class MemoryCacheService<T> implements CacheService<T> {
 
     @Override
     public boolean exist(KeyPrefix keyPrefix, String key) {
-        return null == cache.get(keyPrefix.getFullKey(key)) ? false : true;
+        return null == this.get(keyPrefix, key) ? false : true;
     }
 
     @Override
