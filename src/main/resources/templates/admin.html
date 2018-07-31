@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>后台管理</title>
 </head>
 <body>
 <body id="common" th:replace="/component/common::html"></body>
@@ -80,7 +80,7 @@
 
         <ul class="nav nav-list">
             <li class="active">
-                <a class="popstyle" href="/sys/user/page.do" target="_blank">
+                <a class="popstyle" href="/sys/dept" target="_blank">
                     <i class="menu-icon fa fa-tachometer"></i>
                     <span class="menu-text"> 首页 </span>
                 </a>
@@ -97,7 +97,7 @@
 
                 <ul class="submenu">
                     <li class="">
-                        <a class="popstyle" href="/sys/dept/view" target="_blank">
+                        <a class="popstyle" href="/sys/dept" target="_blank">
                             <i class="menu-icon fa fa-caret-right"></i>
                             用户管理
                         </a>
@@ -111,7 +111,7 @@
                         <b class="arrow"></b>
                     </li>
                     <li class="">
-                        <a class="popstyle" href="/sys/aclModule/acl.page" target="_blank">
+                        <a class="popstyle" href="/sys/aclmodule" target="_blank">
                             <i class="menu-icon fa fa-caret-right"></i>
                             权限管理
                         </a>
@@ -163,7 +163,7 @@
     </div>
 
     <div class="main-content">
-        <iframe id="innerFrame" src="/sys/dept/dept.view" width="99%" style="min-height: 768px;"></iframe>
+        <iframe id="innerFrame" src="/sys/dept" width="99%" style="min-height: 768px;"></iframe>
     </div>
     <!-- /.main-content -->
 

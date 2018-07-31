@@ -25,6 +25,6 @@ public class PageResult<T> {
 
     private int pageSize;
 
-    private List<T> data = new LinkedList<>();
+    private List<T> data;
 
 }

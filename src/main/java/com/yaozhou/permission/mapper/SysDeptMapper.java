@@ -25,6 +25,7 @@ public interface SysDeptMapper {
      * 查询一个部门下具有相同名称的子部门个数
      * @param parentId
      * @param name
+     * @param deptId 如果deptId不为空, 排除这个deptId
      * @return
      */
     public int countByNameAndParentId(@Param("parentId") Integer parentId, @Param("name") String name, @Param("deptId") Integer deptId);

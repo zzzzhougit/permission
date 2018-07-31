@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -48,19 +49,17 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public void add(UserParam userParam) {
-        SysUser sysUser =
-                SysUser.builder()
-                        .mail(userParam.getMail())
-                        .deptId(userParam.getDeptId())
-                        .remark(userParam.getRemark())
-                        .salt(PassWordUtil.randomSalt())
-                        .username(userParam.getUsername())
-                        .telephone(userParam.getTelephone())
-                        //TODO
-                        .operator("System")
-                        .operateIp("127.0.0.1")
-                        .build();
+    public void add(UserParam userParam, SysUser operator, String ipaddr) {
+        SysUser sysUser = SysUser.builder()
+                    .operateIp(ipaddr)
+                    .mail(userParam.getMail())
+                    .deptId(userParam.getDeptId())
+                    .remark(userParam.getRemark())
+                    .salt(PassWordUtil.randomSalt())
+                    .username(userParam.getUsername())
+                    .telephone(userParam.getTelephone())
+                    .operator(operator.getUsername())
+                    .build();
 
         //设置密码
         String password = PassWordUtil.randomPassword();
@@ -72,20 +71,19 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
-    public void update(UserParam userParam) {
+    public void update(UserParam userParam, SysUser operator, String ipaddr) {
         SysUser after = SysUser.builder()
-                .mail(userParam.getMail())
-                .userId(userParam.getUserId())
-                .deptId(userParam.getDeptId())
-                .status(userParam.getStatus())
-                .remark(userParam.getRemark())
-                .username(userParam.getUsername())
-                .telephone(userParam.getTelephone())
-                //TODO
-                .operator("System")
-                .operateIp("127.0.0.1")
-                .operateTime(new Date())
-                .build();
+                    .operateIp(ipaddr)
+                    .operateTime(new Date())
+                    .mail(userParam.getMail())
+                    .userId(userParam.getUserId())
+                    .deptId(userParam.getDeptId())
+                    .status(userParam.getStatus())
+                    .remark(userParam.getRemark())
+                    .operator(operator.getUsername())
+                    .username(userParam.getUsername())
+                    .telephone(userParam.getTelephone())
+                    .build();
 
         updateUser(after);
     }
@@ -109,7 +107,12 @@ public class SysUserServiceImpl implements SysUserService {
                     .build();
         }
 
-        return PageResult.<SysUser>builder().build();
+        return PageResult.<SysUser>builder()
+                .total(count)
+                .data(new LinkedList<>())
+                .pageNo(pageParam.getPageNo())
+                .pageSize(pageParam.getPageSize())
+                .build();
     }
 
     //============================================

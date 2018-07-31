@@ -22,8 +22,10 @@ public interface SysUserService extends StatusCode {
     /**
      * 添加用户
      * @param userParam
+     * @param operator
+     * @param ipaddr
      */
-    public void add(UserParam userParam);
+    public void add(UserParam userParam, SysUser operator, String ipaddr);
 
     /**
      * 更新用户
@@ -32,11 +34,11 @@ public interface SysUserService extends StatusCode {
      *  当用户状态不合法, 移除用户缓存数据;
      *  当用户状态合法, 如果缓存数据存在, 更新缓存数据
      *
-     *  用户更新和缓存更新不在一个事务内
-     *
      * @param userParam
+     * @param operator
+     * @param ipaddr
      */
-    public void update(UserParam userParam);
+    public void update(UserParam userParam, SysUser operator, String ipaddr);
 
     /**
      * 根据用户名获得用户

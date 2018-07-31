@@ -4,6 +4,7 @@ import com.yaozhou.permission.common.result.Result;
 import com.yaozhou.permission.controllers.BaseController;
 import com.yaozhou.permission.filters.NeedLogin;
 import com.yaozhou.permission.params.DeptParam;
+import com.yaozhou.permission.util.IpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -29,10 +31,10 @@ public class SysDeptController extends BaseController {
      * 部门管理视图
      * @return
      */
-    @RequestMapping(path = "dept.view", method = {GET})
+    @RequestMapping(method = GET)
     public String view() {
 
-        return "dept/dept.html";
+        return "sys/dept";
     }
 
     //====================================================
@@ -45,8 +47,8 @@ public class SysDeptController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(path = "/add", method = {GET, POST})
-    public Result<?> addDept(@Valid DeptParam deptParam) throws Exception {
-        sysDeptService.add(deptParam);
+    public Result<?> addDept(HttpServletRequest request,  @Valid DeptParam deptParam) throws Exception {
+        sysDeptService.add(deptParam, authService.getCurrentUser(request), IpUtil.getRemoteIp(request));
 
         return Result.success(null);
     }
@@ -59,6 +61,10 @@ public class SysDeptController extends BaseController {
     @ResponseBody
     @RequestMapping(path = "/delete", method = {GET, POST})
     public Result<?> deleteDept(@RequestParam("deptId")Integer deptId) {
+        if (null == deptId) {
+
+            return Result.error(CODE_ARGE_ERROR, "deptId不能为空");
+        }
 
         return Result.success(null);
     }
@@ -71,8 +77,8 @@ public class SysDeptController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(path = "/update", method = {GET, POST})
-    public Result<?> updateDept(@Valid DeptParam deptParam) throws Exception {
-        sysDeptService.update(deptParam);
+    public Result<?> updateDept(HttpServletRequest request,  @Valid DeptParam deptParam) throws Exception {
+        sysDeptService.update(deptParam, authService.getCurrentUser(request), IpUtil.getRemoteIp(request));
 
         return Result.success(null);
     }

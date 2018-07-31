@@ -1,5 +1,6 @@
 package com.yaozhou.permission.service;
 
+import com.yaozhou.permission.dto.AclModuleLevelDto;
 import com.yaozhou.permission.dto.DeptLevelDto;
 import com.yaozhou.permission.status.StatusCode;
 
@@ -17,5 +18,12 @@ public interface SysTreeService extends StatusCode {
      * @throws Exception
      */
     public List<DeptLevelDto> deptTree() throws Exception;
+
+    /**
+     * 获得权限模块树
+     * @return
+     * @throws Exception
+     */
+    public List<AclModuleLevelDto> aclModuleTree() throws Exception;
 
 }

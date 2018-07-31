@@ -45,6 +45,12 @@ public class AuthServiceImpl implements AuthService {
     private SysUserService sysUserService;
 
     @Override
+    public SysUser getCurrentUser(HttpServletRequest request) {
+
+        return (SysUser) request.getAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix());
+    }
+
+    @Override
     public boolean keepAlive(HttpServletRequest request, HttpServletResponse response) throws Exception {
         if (checkVisa(request) == false) {
             clearLoginCookie(response);
@@ -59,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
             return false;
         }
 
-        String userId = cookieInfo.getString("userId");
+        Integer userId = cookieInfo.getInteger("userId");
         if (null == userId) {
             clearLoginCookie(response);
 
@@ -67,12 +73,13 @@ public class AuthServiceImpl implements AuthService {
         }
 
         //刷新ttl
-        boolean refreshed = cacheService.setEx(UserTtlKeyPrefix.KEY_PREFIX_USER_TTL, userId, System.currentTimeMillis());
+        boolean refreshed = cacheService.setEx(UserTtlKeyPrefix.KEY_PREFIX_USER_TTL, userId.toString(), System.currentTimeMillis());
         if (!refreshed) {
             clearLoginCookie(response);
 
             return false;
         }
+        request.setAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix(), sysUserService.cachedSelectByPrimaryKey(userId));
 
         return true;
     }

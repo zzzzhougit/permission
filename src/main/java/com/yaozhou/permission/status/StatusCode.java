@@ -20,7 +20,7 @@ public interface StatusCode {
     public static final int CODE_SERVER_ERROR = 5000001;
 
     /**
-     * 资源冲突异常
+     * 资源异常
      * code: 40000xx
      */
     //资源冲突

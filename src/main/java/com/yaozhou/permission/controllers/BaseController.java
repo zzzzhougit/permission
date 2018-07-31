@@ -1,9 +1,6 @@
 package com.yaozhou.permission.controllers;
 
-import com.yaozhou.permission.service.AuthService;
-import com.yaozhou.permission.service.SysDeptService;
-import com.yaozhou.permission.service.SysTreeService;
-import com.yaozhou.permission.service.SysUserService;
+import com.yaozhou.permission.service.*;
 import com.yaozhou.permission.status.StatusCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -15,16 +12,20 @@ import org.springframework.context.ApplicationContext;
 public class BaseController implements StatusCode {
 
     @Autowired
+    protected ApplicationContext applicationContext;
+
+    @Autowired
     protected AuthService authService;
+    @Autowired
+    protected SysAclService aclService;
     @Autowired
     protected SysTreeService sysTreeService;
     @Autowired
     protected SysDeptService sysDeptService;
     @Autowired
     protected SysUserService sysUserService;
-
     @Autowired
-    protected ApplicationContext applicationContext;
+    protected SysAclModuleService sysAclModuleService;
 
     public <T> T popBean(Class<T> clazz) {
         if (null == applicationContext) {

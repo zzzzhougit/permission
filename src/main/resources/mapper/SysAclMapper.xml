@@ -185,4 +185,28 @@
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where acl_id = #{aclId,jdbcType=INTEGER}
   </update>
+  
+  <select id="countByAclModuleId" parameterType="int" resultType="int">
+    select count(1)
+    from sys_acl
+    where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
+  </select>
+
+  <select id="getPageByAclModuleId" parameterType="map" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from sys_acl
+    where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
+    order by name
+    limit #{page.offset}, #{page.pageSize}
+  </select>
+
+  <select id="countByNameAndAclModuleId" parameterType="map" resultType="Integer">
+    select count(1)
+    from sys_acl
+    where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
+    and name = #{name,jdbcType=VARCHAR}
+    <if test="aclId != null">
+      and acl_id != #{aclId,jdbcType=INTEGER}
+    </if>
+  </select>
 </mapper>

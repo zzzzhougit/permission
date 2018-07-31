@@ -161,4 +161,68 @@
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
   </update>
+
+  <select id="getAllAclModule" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_acl_module
+  </select>
+
+  <select id="countByNameAndParentId" parameterType="map" resultType="java.lang.Integer">
+    select count(1)
+    from sys_acl_module
+    where name = #{name}
+    <if test="parentId != null">
+      and parent_id = #{parentId}
+    </if>
+    <if test="aclModuleId != null">
+      and acl_module_id != #{aclModuleId}
+    </if>
+  </select>
+
+  <select id="getChildrenDeptByLevel" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from sys_acl_module
+    where level like concat(#{level,jdbcType=VARCHAR}, '%')
+  </select>
+
+  <update id="batchUpdateByPrimaryKeySelective" parameterType="collection">
+    <foreach collection="aclModels" item="aclModule" separator=";">
+      update sys_acl_module
+      <set>
+        <if test="aclModule.name != null">
+          name = #{aclModule.name,jdbcType=VARCHAR},
+        </if>
+        <if test="aclModule.parentId != null">
+          parent_id = #{aclModule.parentId,jdbcType=INTEGER},
+        </if>
+        <if test="aclModule.level != null">
+          level = #{aclModule.level,jdbcType=VARCHAR},
+        </if>
+        <if test="aclModule.seq != null">
+          seq = #{aclModule.seq,jdbcType=INTEGER},
+        </if>
+        <if test="aclModule.status != null">
+          status = #{aclModule.status,jdbcType=SMALLINT},
+        </if>
+        <if test="aclModule.remark != null">
+          remark = #{aclModule.remark,jdbcType=VARCHAR},
+        </if>
+        <if test="aclModule.createTime != null">
+          create_time = #{aclModule.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="aclModule.operateTime != null">
+          operate_time = #{aclModule.operateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="aclModule.operator != null">
+          operator = #{aclModule.operator,jdbcType=VARCHAR},
+        </if>
+        <if test="aclModule.operateIp != null">
+          operate_ip = #{aclModule.operateIp,jdbcType=VARCHAR},
+        </if>
+      </set>
+      where acl_module_id = #{aclModule.aclModuleId,jdbcType=INTEGER}
+    </foreach>
+  </update>
 </mapper>

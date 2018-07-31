@@ -2,6 +2,7 @@ package com.yaozhou.permission.cache.service;
 
 import com.yaozhou.permission.cache.CacheService;
 import com.yaozhou.permission.cache.KeyPrefix;
+import com.yaozhou.permission.common.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +33,12 @@ public class MemoryCacheService<T> implements CacheService<T> {
 
         T value = null;
         ValueWithTtl valueWithTtl = cache.get(keyPrefix.getFullKey(key));
-        if (valueWithTtl.expired(time)) {
-            cache.remove(keyPrefix.getFullKey(key));
-        } else {
-            value = (T) valueWithTtl.value();
+        if (null != value) {
+            if (valueWithTtl.expired(time)) {
+                cache.remove(keyPrefix.getFullKey(key));
+            } else {
+                value = (T) valueWithTtl.value();
+            }
         }
 
         return value;
@@ -83,11 +86,13 @@ public class MemoryCacheService<T> implements CacheService<T> {
                     if (valueWithTtl.expired(System.currentTimeMillis())) {
                         cache.remove(key);
 
-                        log.info("key{}, value{} is expored", key, valueWithTtl.value());
+                        if (log.isDebugEnabled()) {
+                            log.info("key{}, value{} is expored", key, valueWithTtl.value());
+                        }
                     }
                 });
             }
-        }, 0, 1000);
+        }, 0, TimeUnit.MINUTE * 30 * 1000);
     }
 
     /**

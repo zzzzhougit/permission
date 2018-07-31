@@ -1,5 +1,6 @@
 package com.yaozhou.permission.service;
 
+import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.params.LoginUserParam;
 import com.yaozhou.permission.status.StatusCode;
 
@@ -12,6 +13,13 @@ import javax.servlet.http.HttpServletResponse;
  * @since 2018/7/28 21:00
  */
 public interface AuthService extends StatusCode {
+
+    /**
+     * 获取当前登录环境的user
+     * @param request
+     * @return
+     */
+    public SysUser getCurrentUser(HttpServletRequest request);
 
     /**
      * 校验用户登录

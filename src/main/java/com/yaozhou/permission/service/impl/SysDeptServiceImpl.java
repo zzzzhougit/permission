@@ -4,6 +4,7 @@ import com.yaozhou.permission.common.exception.PermException;
 import com.yaozhou.permission.common.result.entity.CodeMessage;
 import com.yaozhou.permission.mapper.SysDeptMapper;
 import com.yaozhou.permission.model.SysDept;
+import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.params.DeptParam;
 import com.yaozhou.permission.service.SysDeptService;
 import com.yaozhou.permission.util.LevelUtil;
@@ -31,25 +32,23 @@ public class SysDeptServiceImpl implements SysDeptService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void update(DeptParam deptParam) throws Exception {
+    public void update(DeptParam deptParam, SysUser operator, String ipaddr) throws Exception {
         SysDept before = sysDeptMapper.selectByPrimaryKey(deptParam.getDeptId());
         if (null == before) {
             throw new PermException(CODE_RESOURCE_NOT_EXIST, "更新的部门不存在");
         }
 
         SysDept after = SysDept.builder()
-            .seq(deptParam.getSeq())
-            .level(before.getLevel())
-            .name(deptParam.getName())
-            .deptId(before.getDeptId())
-            .remark(deptParam.getRemark())
-            .parentId(deptParam.getParentId())
-
-            //TODO
-            .operator("System")
-            .operateIp("127.0.0.1")
-            .operateTime(new Date())
-            .build();
+                    .seq(deptParam.getSeq())
+                    .level(before.getLevel())
+                    .name(deptParam.getName())
+                    .deptId(before.getDeptId())
+                    .remark(deptParam.getRemark())
+                    .parentId(deptParam.getParentId())
+                    .operator(operator.getUsername())
+                    .operateIp(ipaddr)
+                    .operateTime(new Date())
+                    .build();
         after.setLevel(checkAndCalculateLevel(after));
 
         updateWithChild(before, after);
@@ -62,17 +61,15 @@ public class SysDeptServiceImpl implements SysDeptService {
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void add(DeptParam deptParam) throws Exception {
+    public void add(DeptParam deptParam, SysUser operator, String ipaddr) throws Exception {
         SysDept sysDept = SysDept.builder()
-            .seq(deptParam.getSeq())
-            .name(deptParam.getName())
-            .remark(deptParam.getRemark())
-            .parentId(deptParam.getParentId())
-
-            //TODO
-            .operator("System")
-            .operateIp("127.0.0.1")
-            .build();
+                    .seq(deptParam.getSeq())
+                    .name(deptParam.getName())
+                    .remark(deptParam.getRemark())
+                    .parentId(deptParam.getParentId())
+                    .operator(operator.getUsername())
+                    .operateIp(ipaddr)
+                    .build();
         sysDept.setLevel(checkAndCalculateLevel(sysDept));
 
         sysDeptMapper.insertSelective(sysDept);
@@ -130,10 +127,10 @@ public class SysDeptServiceImpl implements SysDeptService {
                 level = before.getLevel() + LevelUtil.SEPARATOR;
             }
 
-            List<SysDept> childrenSysDept = sysDeptMapper.getChildrenDeptByLevel(level);
-            if (!CollectionUtils.isEmpty(childrenSysDept)) {
+            List<SysDept> children = sysDeptMapper.getChildrenDeptByLevel(level);
+            if (!CollectionUtils.isEmpty(children)) {
 
-                for (SysDept ch : childrenSysDept) {
+                for (SysDept ch : children) {
                     if (ch.getLevel().indexOf(before.getLevel()) == 0) {
                         String newLevel = after.getLevel() + ch.getLevel().substring(before.getLevel().length());
 
