@@ -58,4 +58,4 @@ mybatis:
 
 #日志相关配置
 logging:
-  path: E:\git\permission\logs
+  path: K:\Git\permission\logs

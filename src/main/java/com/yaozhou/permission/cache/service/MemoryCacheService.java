@@ -75,7 +75,7 @@ public class MemoryCacheService<T> implements CacheService<T> {
     private final Map<String, ValueWithTtl<T>> cache = new ConcurrentHashMap<>();
 
     public MemoryCacheService() {
-        /*timmer.schedule(new TimerTask() {
+        timmer.schedule(new TimerTask() {
             @Override
             public void run() {
                 cache.keySet().forEach(key -> {
@@ -87,7 +87,7 @@ public class MemoryCacheService<T> implements CacheService<T> {
                     }
                 });
             }
-        }, 0, 1000);*/
+        }, 0, 1000);
     }
 
     /**
