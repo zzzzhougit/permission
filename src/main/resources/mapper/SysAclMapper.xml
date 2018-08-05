@@ -16,10 +16,12 @@
     <result column="operator" jdbcType="VARCHAR" property="operator" />
     <result column="operate_ip" jdbcType="VARCHAR" property="operateIp" />
   </resultMap>
+
   <sql id="Base_Column_List">
     acl_id, code, name, acl_module_id, url, type, status, seq, remark, create_time, operate_time, 
     operator, operate_ip
   </sql>
+
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -185,7 +187,17 @@
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where acl_id = #{aclId,jdbcType=INTEGER}
   </update>
-  
+
+  <select id="coutByAclModuleIdAndName" parameterType="map" resultType="int">
+    select count(1)
+    from sys_acl
+    where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
+    and name = #{name,jdbcType=VARCHAR}
+    <if test="null != aclId">
+      and acl_id != #{aclId,jdbcType=INTEGER}
+    </if>
+  </select>
+
   <select id="countByAclModuleId" parameterType="int" resultType="int">
     select count(1)
     from sys_acl
@@ -196,7 +208,7 @@
     select <include refid="Base_Column_List"/>
     from sys_acl
     where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
-    order by name
+    order by seq
     limit #{pageParam.offset}, #{pageParam.pageSize}
   </select>
 
@@ -205,8 +217,23 @@
     from sys_acl
     where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
     and name = #{name,jdbcType=VARCHAR}
+    and url = #{url,jdbcType=VARCHAR}
     <if test="aclId != null">
       and acl_id != #{aclId,jdbcType=INTEGER}
     </if>
+  </select>
+
+  <select id="getAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from sys_acl
+  </select>
+
+  <select id="getAclListByAclIdList" parameterType="list" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from sys_acl
+    where acl_id in
+    <foreach collection="aclIdList" item="aclId" open="(" close=")" separator=",">
+      #{aclId}
+    </foreach>
   </select>
 </mapper>

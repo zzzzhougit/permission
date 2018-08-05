@@ -28,6 +28,11 @@ public class SysAclModuleServiceImpl implements SysAclModuleService {
     private SysAclModuleMapper sysAclModuleMapper;
 
     @Override
+    public List<SysAclModule> getAll() {
+        return sysAclModuleMapper.getAllAclModule();
+    }
+
+    @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void add(AclModuleParam aclModuleParam, SysUser operator, String ipaddr) {
         SysAclModule sysAclModule = SysAclModule.builder()

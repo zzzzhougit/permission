@@ -33,7 +33,7 @@
     <div class="col-sm-9">
         <div class="col-xs-12">
             <div class="table-header">
-                权限点列表&nbsp;&nbsp;
+                权限列表&nbsp;&nbsp;
                 <a class="green" href="javascript:void(0);">
                     <i class="ace-icon fa fa-plus-circle orange bigger-130 acl-add"></i>
                 </a>
@@ -148,7 +148,7 @@
             </tr>
             <tr>
                 <td><label for="aclUrl">URL</label></td>
-                <td><input type="text" name="url" id="aclUrl" value="1" class="text ui-widget-content ui-corner-all"></td>
+                <td><input type="text" name="url" id="aclUrl" value="" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
                 <td><label for="aclStatus">状态</label></td>
@@ -223,7 +223,7 @@
     $(function() {
         var aclModuleList; // 存储树形权限模块列表
         var aclModuleMap = {}; // 存储map格式权限模块信息
-        var aclMap = {}; // 存储map格式的权限点信息
+        var aclMap = {}; // 存储map格式的角色信息
         var optionStr = "";
         var lastClickAclModuleId = -1;
 
@@ -520,7 +520,7 @@
                 var pageNo = $("#aclPage .pageNo").val() || 1;
                 renderPage(url, result.data.total, pageNo, pageSize, result.data.total > 0 ? result.data.data.length : 0, "aclPage", renderAclListAndPage);
             } else {
-                showMessage("获取权限点列表", result.message, false);
+                showMessage("获取角色列表", result.message, false);
             }
         }
 
@@ -538,7 +538,7 @@
                         if (result.success) {
                             console.log(result)
                         } else {
-                            showMessage("获取权限点分配的用户和角色", result.message, false);
+                            showMessage("获取角色分配的用户和角色", result.message, false);
                         }
                     }
                 })

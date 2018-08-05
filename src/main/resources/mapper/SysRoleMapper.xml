@@ -138,4 +138,18 @@
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where role_id = #{roleId,jdbcType=INTEGER}
   </update>
+
+  <select id="countByRoleNameAndRoleId" parameterType="map" resultType="int">
+    select count(1)
+    from sys_role
+    where name = #{name}
+    <if test="null != roleId">
+      and role_id != #{roleId,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <select id="getAll" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from sys_role
+  </select>
 </mapper>

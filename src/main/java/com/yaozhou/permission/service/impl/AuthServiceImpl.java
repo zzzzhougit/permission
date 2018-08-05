@@ -48,7 +48,6 @@ public class AuthServiceImpl implements AuthService {
     public SysUser getCurrentUser(HttpServletRequest request) {
         Object attribute = request.getAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix());
         if (null != attribute) {
-
             try {
                 return sysUserService.cachedSelectByPrimaryKey(Integer.parseInt(attribute.toString()));
             } catch (Exception e) {

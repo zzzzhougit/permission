@@ -5,33 +5,30 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Yao.Zhou
- * @since 2018/8/1 0:00
+ * @since 2018/8/5 13:06
  */
 @Getter
 @Setter
 @ToString
-public class AclParam {
+public class RoleParam {
 
-    private Integer aclId;
+    private Integer roleId;
 
     @NotBlank(message = "角色名称不能为空")
     @Length(min = 2, max = 20, message = "角色名称必须在2-20个字之间")
     private String name;
 
-    @NotNull(message = "权限模块id不能为空")
-    private Integer aclModuleId;
-
-    @Length(min = 6, max = 256, message = "url必须在6-256个字之间")
-    private String url;
-
     @NotNull(message = "角色类型不能为空")
-    @Min(value = 0, message = "角色类型不合法")
-    @Max(value = 3, message = "角色类型不合法")
-    private Short type;
+    @Min(value = 1, message = "角色类型不合法")
+    @Max(value = 2, message = "角色类型不合法")
+    private Short type = 1;
 
     @NotNull(message = "角色状态不能为空")
     @Min(value = 0, message = "角色状态不合法")
@@ -39,7 +36,7 @@ public class AclParam {
     private Short status;
 
     @NotNull(message = "seq不能为空")
-    private Integer seq;
+    private String seq;
 
     @Length(min = 0, max = 200, message = "备注必须在0-200个字以内")
     private String remark;

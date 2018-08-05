@@ -114,4 +114,71 @@
       operate_ip = #{operateIp,jdbcType=VARCHAR}
     where role_acl_id = #{roleAclId,jdbcType=INTEGER}
   </update>
+
+  <select id="getAclIdListByRoleIdList" parameterType="collection" resultType="int">
+    select acl_id
+    from sys_role_acl
+    where role_id in 
+      <foreach collection="roleIdList" item="roleId" open="(" close=")" separator=",">
+        #{roleId,jdbcType=INTEGER}
+      </foreach>
+  </select>
+
+  <delete id="deleteByRoleId" parameterType="int">
+    delete from sys_role_acl
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="bathInsertSelective" parameterType="collection">
+    <foreach collection="sysRoleAclList" item="roleAcl" separator=";">
+      insert into sys_role_acl
+      <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="roleAcl.roleAclId != null">
+          role_acl_id,
+        </if>
+        <if test="roleAcl.roleId != null">
+          role_id,
+        </if>
+        <if test="roleAcl.aclId != null">
+          acl_id,
+        </if>
+        <if test="roleAcl.createTime != null">
+          create_time,
+        </if>
+        <if test="roleAcl.operateTime != null">
+          operate_time,
+        </if>
+        <if test="roleAcl.operator != null">
+          operator,
+        </if>
+        <if test="roleAcl.operateIp != null">
+          operate_ip,
+        </if>
+      </trim>
+
+      <trim prefix="values (" suffix=")" suffixOverrides=",">
+        <if test="roleAcl.roleAclId != null">
+          #{roleAcl.roleAclId,jdbcType=INTEGER},
+        </if>
+        <if test="roleAcl.roleId != null">
+          #{roleAcl.roleId,jdbcType=INTEGER},
+        </if>
+        <if test="roleAcl.aclId != null">
+          #{roleAcl.aclId,jdbcType=INTEGER},
+        </if>
+        <if test="roleAcl.createTime != null">
+          #{roleAcl.createTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="roleAcl.operateTime != null">
+          #{roleAcl.operateTime,jdbcType=TIMESTAMP},
+        </if>
+        <if test="roleAcl.operator != null">
+          #{roleAcl.operator,jdbcType=VARCHAR},
+        </if>
+        <if test="roleAcl.operateIp != null">
+          #{roleAcl.operateIp,jdbcType=VARCHAR},
+        </if>
+      </trim>
+    </foreach>
+  </insert>
 </mapper>

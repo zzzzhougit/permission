@@ -5,11 +5,19 @@ import com.yaozhou.permission.model.SysUser;
 import com.yaozhou.permission.params.DeptParam;
 import com.yaozhou.permission.status.StatusCode;
 
+import java.util.List;
+
 /**
  * @author Yao.Zhou
  * @since 2018/7/21 20:52
  */
 public interface SysDeptService extends StatusCode {
+
+    /**
+     * 获得所有部门
+     * @return
+     */
+    public List<SysDept> getAll();
 
     /**
      * 保存一个部门

@@ -60,6 +60,11 @@ public class SysDeptServiceImpl implements SysDeptService {
     }
 
     @Override
+    public List<SysDept> getAll() {
+        return sysDeptMapper.getAllDept();
+    }
+
+    @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void add(DeptParam deptParam, SysUser operator, String ipaddr) throws Exception {
         SysDept sysDept = SysDept.builder()

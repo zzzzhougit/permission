@@ -11,6 +11,7 @@ import java.util.Date;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class SysAcl implements Serializable {
 
     private static final long serialVersionUID = -5400375896175706698L;

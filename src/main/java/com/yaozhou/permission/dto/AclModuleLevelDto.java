@@ -18,6 +18,8 @@ import java.util.List;
 @ToString
 public class AclModuleLevelDto extends SysAclModule {
 
+    List<AclDto> aclList = new LinkedList<>();
+
     List<AclModuleLevelDto> nextLevelAclModuleDtoList = new LinkedList<>();
 
     public static AclModuleLevelDto adapt(SysAclModule sysAclModule) {

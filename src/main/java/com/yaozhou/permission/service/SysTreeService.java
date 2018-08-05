@@ -26,4 +26,13 @@ public interface SysTreeService extends StatusCode {
      */
     public List<AclModuleLevelDto> aclModuleTree() throws Exception;
 
+    /**
+     *
+     * @param userId
+     * @param roleId
+     * @return
+     * @throws Exception
+     */
+    public List<AclModuleLevelDto> roleTree(int userId, int roleId) throws Exception;
+
 }

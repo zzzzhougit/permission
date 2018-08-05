@@ -19,13 +19,22 @@ public abstract class BaseController implements StatusCode {
     @Autowired
     protected SysAclService sysAclService;
     @Autowired
+    protected SysCoreService sysCoreService;
+    @Autowired
+    protected SysRoleService sysRoleService;
+    @Autowired
     protected SysTreeService sysTreeService;
     @Autowired
     protected SysDeptService sysDeptService;
     @Autowired
     protected SysUserService sysUserService;
     @Autowired
+    protected SysRoleAclService sysRoleAclService;
+    @Autowired
+    protected SysRoleUserService sysRoleUserService;
+    @Autowired
     protected SysAclModuleService sysAclModuleService;
+
 
     public <T> T popBean(Class<T> clazz) {
         if (null == applicationContext) {

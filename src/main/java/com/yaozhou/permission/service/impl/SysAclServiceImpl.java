@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,6 +29,21 @@ public class SysAclServiceImpl implements SysAclService {
 
     @Autowired
     private SysAclMapper sysAclMapper;
+
+    @Override
+    public List<SysAcl> getAll() {
+        return sysAclMapper.getAll();
+    }
+
+    @Override
+    public List<SysAcl> getAclListByAclIdList(List<Integer> aclIdList) {
+        if (CollectionUtils.isEmpty(aclIdList)) {
+
+            return new ArrayList<>();
+        }
+
+        return sysAclMapper.getAclListByAclIdList(aclIdList);
+    }
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -44,6 +61,10 @@ public class SysAclServiceImpl implements SysAclService {
                 .aclModuleId(aclParam.getAclModuleId())
                 .build();
 
+        if (exist(aclParam.getAclModuleId(), aclParam.getAclId(), aclParam.getName(), aclParam.getUrl())) {
+            throw new PermException(CODE_RESOURCE_CONFLICT, "权限模块下已存在相同的角色");
+        }
+
         sysAclMapper.insertSelective(sysAcl);
     }
 
@@ -55,6 +76,11 @@ public class SysAclServiceImpl implements SysAclService {
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public void update(AclParam aclParam, SysUser operator, String ipaddr) {
+        SysAcl before = sysAclMapper.selectByPrimaryKey(aclParam.getAclId());
+        if (null == before) {
+            throw new PermException(CODE_RESOURCE_NOT_EXIST, "更新的角色不存在");
+        }
+
         SysAcl after = SysAcl.builder()
                 .operateIp(ipaddr)
                 .seq(aclParam.getSeq())
@@ -69,13 +95,8 @@ public class SysAclServiceImpl implements SysAclService {
                 .aclModuleId(aclParam.getAclModuleId())
                 .build();
 
-        SysAcl before = sysAclMapper.selectByPrimaryKey(aclParam.getAclId());
-        if (null == before) {
-            throw new PermException(CODE_RESOURCE_NOT_EXIST, "更新的权限点不存在");
-        }
-
-        if (exist(aclParam.getAclModuleId(), aclParam.getAclId(), aclParam.getName())) {
-            throw new PermException(CODE_RESOURCE_CONFLICT, "权限模块下已存在相同的权限点");
+        if (exist(aclParam.getAclModuleId(), aclParam.getAclId(), aclParam.getName(), aclParam.getUrl())) {
+            throw new PermException(CODE_RESOURCE_CONFLICT, "权限模块下已存在相同的角色");
         }
 
         sysAclMapper.updateByPrimaryKeySelective(after);
@@ -112,9 +133,8 @@ public class SysAclServiceImpl implements SysAclService {
      * @param name
      * @return
      */
-    private boolean exist(int aclModuleId, int aclId, String name) {
-
-        return false;
+    private boolean exist(int aclModuleId, Integer aclId, String name, String url) {
+        return sysAclMapper.countByNameAndAclModuleId(aclModuleId, name, url, aclId) > 0;
     }
 
     /**
@@ -122,7 +142,7 @@ public class SysAclServiceImpl implements SysAclService {
      * @return
      */
     private String generateAclCode() {
-        int random = (int) Math.random() * 100;
+        int random = (int) (Math.random() * 100);
 
         return DateFormatUtils.format(new Date(), "yyyyMMddHHmmss") +  "_"+ random;
     }
