@@ -133,7 +133,7 @@
             </tr>
             <tr>
                 <td><label for="aclName">名称</label></td>
-                <input type="hidden" name="id" id="aclId"/>
+                <input type="hidden" name="aclId" id="aclId"/>
                 <td><input type="text" name="name" id="aclName" value="" class="text ui-widget-content ui-corner-all"></td>
             </tr>
             <tr>
@@ -198,8 +198,8 @@
 
 <script id="aclListTemplate" type="x-tmpl-mustache">
 {{#aclList}}
-<tr role="row" class="acl-name odd" data-id="{{id}}"><!--even -->
-    <td><a href="javascript:void(0);" class="acl-edit" data-id="{{id}}">{{name}}</a></td>
+<tr role="row" class="acl-name odd" data-id="{{aclId}}"><!--even -->
+    <td><a href="javascript:void(0);" class="acl-edit" data-id="{{aclId}}">{{name}}</a></td>
     <td>{{showAclModuleName}}</td>
     <td>{{showType}}</td>
     <td>{{url}}</td>
@@ -207,10 +207,10 @@
     <td>{{seq}}</td>
     <td>
         <div class="hidden-sm hidden-xs action-buttons">
-            <a class="green acl-edit" href="javascript:void(0);" data-id="{{id}}">
+            <a class="green acl-edit" href="javascript:void(0);" data-id="{{aclId}}">
                 <i class="ace-icon fa fa-pencil bigger-100"></i>
             </a>
-            <a class="red acl-role" href="javascript:void(0);" data-id="{{id}}">
+            <a class="red acl-role" href="javascript:void(0);" data-id="{{aclId}}">
                 <i class="ace-icon fa fa-flag bigger-100"></i>
             </a>
         </div>
@@ -278,7 +278,7 @@
                         updateAclModule(true, function (data) {
                             $("#dialog-aclModule-form").dialog("close");
                         }, function (data) {
-                            showMessage("新增权限模块", data.msg, false);
+                            showMessage("新增权限模块", data.message, false);
                         })
                     },
                     "取消": function () {
@@ -398,7 +398,7 @@
                     $.ajax({
                         url: "/sys/aclmodule/delete",
                         data: {
-                            id: aclModuleId
+                            aclModuleId: aclModuleId
                         },
                         success: function (result) {
                             if (result.success) {
@@ -441,7 +441,7 @@
                             updateAclModule(false, function (data) {
                                 $("#dialog-aclModule-form").dialog("close");
                             }, function (data) {
-                                showMessage("编辑权限模块", data.msg, false);
+                                showMessage("编辑权限模块", data.message, false);
                             })
                         },
                         "取消": function () {
@@ -511,7 +511,7 @@
                     $("#aclList").html(rendered);
                     bindAclClick();
                     $.each(result.data.data, function(i, acl) {
-                        aclMap[acl.id] = acl;
+                        aclMap[acl.aclId] = acl;
                     })
                 } else {
                     $("#aclList").html('');
@@ -574,7 +574,7 @@
                             updateAcl(false, function (data) {
                                 $("#dialog-acl-form").dialog("close");
                             }, function (data) {
-                                showMessage("编辑权限", data.msg, false);
+                                showMessage("编辑权限", data.message, false);
                             })
                         },
                         "取消": function () {
@@ -602,7 +602,7 @@
                         updateAcl(true, function (data) {
                             $("#dialog-acl-form").dialog("close");
                         }, function (data) {
-                            showMessage("新增权限", data.msg, false);
+                            showMessage("新增权限", data.message, false);
                         })
                     },
                     "取消": function () {

@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,13 +55,16 @@ public class SysAclModuleController extends BaseController {
 
     /**
      * 删除权限模块
-     * @param request
-     * @param aclModuleParam
+     * @param aclModuleId
      * @return
      */
     @ResponseBody
     @RequestMapping(path = "/delete", method = {GET, POST})
-    public Result<?> deleteAclModule(HttpServletRequest request, @Valid AclModuleParam aclModuleParam) {
+    public Result<?> deleteAclModule(@RequestParam("aclModuleId")Integer aclModuleId) {
+        if (null == aclModuleId || aclModuleId <= 0) {
+
+            return Result.error(CODE_ARGE_ERROR, "aclModuleId不能为空");
+        }
 
         return Result.success(null);
     }

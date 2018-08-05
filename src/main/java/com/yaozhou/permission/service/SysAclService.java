@@ -22,6 +22,12 @@ public interface SysAclService extends StatusCode {
     public void add(AclParam aclParam, SysUser operator, String ipaddr);
 
     /**
+     * 删除一个acl
+     * @param aclId
+     */
+    public void delete(Integer aclId);
+
+    /**
      * 更新Acl
      * 如果Acl在缓存中, 同时更新缓存
      *

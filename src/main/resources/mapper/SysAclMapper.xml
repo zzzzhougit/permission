@@ -197,7 +197,7 @@
     from sys_acl
     where acl_module_id = #{aclModuleId,jdbcType=INTEGER}
     order by name
-    limit #{page.offset}, #{page.pageSize}
+    limit #{pageParam.offset}, #{pageParam.pageSize}
   </select>
 
   <select id="countByNameAndAclModuleId" parameterType="map" resultType="Integer">

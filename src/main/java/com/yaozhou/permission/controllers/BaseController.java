@@ -9,7 +9,7 @@ import org.springframework.context.ApplicationContext;
  * @author Yao.Zhou
  * @since 2018/7/17 23:45
  */
-public class BaseController implements StatusCode {
+public abstract class BaseController implements StatusCode {
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -17,7 +17,7 @@ public class BaseController implements StatusCode {
     @Autowired
     protected AuthService authService;
     @Autowired
-    protected SysAclService aclService;
+    protected SysAclService sysAclService;
     @Autowired
     protected SysTreeService sysTreeService;
     @Autowired

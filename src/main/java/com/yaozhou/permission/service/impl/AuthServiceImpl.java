@@ -46,8 +46,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SysUser getCurrentUser(HttpServletRequest request) {
+        Object attribute = request.getAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix());
+        if (null != attribute) {
 
-        return (SysUser) request.getAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix());
+            try {
+                return sysUserService.cachedSelectByPrimaryKey(Integer.parseInt(attribute.toString()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -79,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
 
             return false;
         }
-        request.setAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix(), sysUserService.cachedSelectByPrimaryKey(userId));
+        request.setAttribute(UserKeyPrefix.KEY_PREFIX_USERID.getPrefix(), userId);
 
         return true;
     }

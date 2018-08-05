@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50624
 File Encoding         : 65001
 
-Date: 2018-07-29 19:02:19
+Date: 2018-08-05 12:46:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -21,10 +21,10 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `sys_acl`;
 CREATE TABLE `sys_acl` (
   `acl_id` int(20) NOT NULL AUTO_INCREMENT COMMENT '权限id',
-  `code` varchar(10) NOT NULL DEFAULT '' COMMENT '权限码',
+  `code` varchar(32) NOT NULL DEFAULT '' COMMENT '权限码',
   `name` varchar(20) NOT NULL DEFAULT '' COMMENT '权限名称',
   `acl_module_id` int(20) NOT NULL COMMENT '权限所在权限模块id',
-  `url` varchar(100) NOT NULL DEFAULT '' COMMENT '请求URL，可以填正则表达式',
+  `url` varchar(256) NOT NULL DEFAULT '' COMMENT '请求URL，可以填正则表达式',
   `type` smallint(4) NOT NULL DEFAULT '1' COMMENT '类型：1菜单，2按钮，3其他',
   `status` smallint(4) NOT NULL DEFAULT '1' COMMENT '状态：1正常，0冻结',
   `seq` int(5) NOT NULL DEFAULT '0' COMMENT '权限在当前模块下的顺序',
@@ -34,11 +34,7 @@ CREATE TABLE `sys_acl` (
   `operator` varchar(20) NOT NULL DEFAULT '' COMMENT '修改人',
   `operate_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后修改者的ip地址',
   PRIMARY KEY (`acl_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of sys_acl
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for sys_acl_module
@@ -57,11 +53,7 @@ CREATE TABLE `sys_acl_module` (
   `operator` varchar(20) NOT NULL,
   `operate_ip` varchar(20) NOT NULL DEFAULT '' COMMENT '最后一次更新操作的ip地址',
   PRIMARY KEY (`acl_module_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of sys_acl_module
--- ----------------------------
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
 -- Table structure for sys_dept
@@ -83,18 +75,6 @@ CREATE TABLE `sys_dept` (
 ) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of sys_dept
--- ----------------------------
-INSERT INTO `sys_dept` VALUES ('35', '研发部', '0', '0', '1', '研发部', '2018-07-29 17:36:20', '2018-07-29 17:36:20', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('36', '销售部', '0', '0', '1', '销售部', '2018-07-29 17:36:40', '2018-07-29 17:36:40', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('37', '研发一部', '35', '0.35', '3', '研发一部', '2018-07-29 17:37:10', '2018-07-29 18:09:52', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('38', '研发二部', '35', '0.35', '1', '研发二部', '2018-07-29 17:37:18', '2018-07-29 17:38:26', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('39', '前端部', '38', '0.35.38', '1', '前端部', '2018-07-29 17:37:44', '2018-07-29 17:38:41', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('40', '华北销售部', '36', '0.36', '1', '华北销售部', '2018-07-29 17:39:34', '2018-07-29 17:39:34', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('41', '西南销售部', '36', '0.36', '1', '', '2018-07-29 17:39:47', '2018-07-29 17:39:47', 'System', '127.0.0.1');
-INSERT INTO `sys_dept` VALUES ('42', '西南销售一部', '41', '0.36.41', '1', '', '2018-07-29 17:40:08', '2018-07-29 17:40:08', 'System', '127.0.0.1');
-
--- ----------------------------
 -- Table structure for sys_log
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_log`;
@@ -111,10 +91,6 @@ CREATE TABLE `sys_log` (
   `status` smallint(4) NOT NULL COMMENT '当前是否被复原过：0没有，1复原过',
   PRIMARY KEY (`log_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of sys_log
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_role
@@ -134,10 +110,6 @@ CREATE TABLE `sys_role` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of sys_role
--- ----------------------------
-
--- ----------------------------
 -- Table structure for sys_role_acl
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_acl`;
@@ -153,10 +125,6 @@ CREATE TABLE `sys_role_acl` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
--- Records of sys_role_acl
--- ----------------------------
-
--- ----------------------------
 -- Table structure for sys_role_user
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_role_user`;
@@ -170,10 +138,6 @@ CREATE TABLE `sys_role_user` (
   `operate_ip` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`role_user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of sys_role_user
--- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_user
@@ -198,9 +162,4 @@ CREATE TABLE `sys_user` (
   UNIQUE KEY `u_index_mail` (`mail`),
   UNIQUE KEY `u_index_username` (`username`),
   KEY `n_index_deptId` (`dept_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
-
--- ----------------------------
--- Records of sys_user
--- ----------------------------
-INSERT INTO `sys_user` VALUES ('2', 'Yao.Zhou', '3537d11c7a8f413dee002b819e87c94f', 'a17ce92b30', '17610970505', 'yaozhou.msg@outlook.com', '8', '1', '研发部同事', '2018-07-22 20:00:14', 'System', '2018-07-22 21:53:57', '127.0.0.1');
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
