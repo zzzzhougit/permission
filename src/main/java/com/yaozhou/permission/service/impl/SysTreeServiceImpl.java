@@ -111,12 +111,7 @@ public class SysTreeServiceImpl implements SysTreeService {
         }
     }
 
-    private static final Comparator<AclDto> aclSeqComparator = new Comparator<AclDto>() {
-        @Override
-        public int compare(AclDto o1, AclDto o2) {
-            return o1.getSeq() - o2.getSeq();
-        }
-    };
+    private static final Comparator<AclDto> aclSeqComparator = (o1, o2) -> o1.getSeq() - o2.getSeq();
 
     //============================================================
     //AclModule Tree
@@ -169,12 +164,7 @@ public class SysTreeServiceImpl implements SysTreeService {
     /**
      * 根据seq值排序AclModule
      */
-    private static final Comparator<AclModuleLevelDto> aclModuleSeqComparator = new Comparator<AclModuleLevelDto>() {
-        @Override
-        public int compare(AclModuleLevelDto o1, AclModuleLevelDto o2) {
-            return o1.getSeq() - o2.getSeq();
-        }
-    };
+    private static final Comparator<AclModuleLevelDto> aclModuleSeqComparator = (o1, o2) -> o1.getSeq() - o2.getSeq();
 
     //============================================================
     //Dept Tree
@@ -226,11 +216,6 @@ public class SysTreeServiceImpl implements SysTreeService {
     /**
      * 根据seq值排序dept
      */
-    private static final Comparator<DeptLevelDto> deptSeqComparator = new Comparator<DeptLevelDto>() {
-        @Override
-        public int compare(DeptLevelDto o1, DeptLevelDto o2) {
-            return o1.getSeq() - o2.getSeq();
-        }
-    };
+    private static final Comparator<DeptLevelDto> deptSeqComparator = (o1, o2) -> o1.getSeq() - o2.getSeq();
 
 }
