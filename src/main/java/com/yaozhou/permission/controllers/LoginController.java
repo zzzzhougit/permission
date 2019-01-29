@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -59,7 +59,7 @@ public class LoginController extends BaseController {
     )
     @ResponseBody
     @RequestMapping(path = "do", method = POST)
-    public Result<?> doLogin(@Valid @RequestBody LoginUserParam loginUserParam,
+    public Result<?> doLogin(@Valid @ModelAttribute LoginUserParam loginUserParam,
                              HttpServletResponse response) throws Exception {
         authService.login(loginUserParam, response);
 
