@@ -1,2 +1,2 @@
 # permission
-permission management master.
+permission management branch.
